@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import {createListingSchema, objectIdSchema, updateListingSchema, updateStepSchema} from "../validations/index.validation.js";
+import {createListingSchema, objectIdSchema, updateListingSchema, listingActionSchema} from "../validations/index.validation.js";
 import listingOnboardingService from "../services/listingOnboarding.services.js";
 
 export const listingOnboarding = asyncHandler(async(req:Request, res:Response) => {
@@ -40,14 +40,13 @@ export const updateListingOnboarding = asyncHandler(async(req:Request, res:Respo
     res.status(200).json({success: true, message: "Listing updated successfully.", data: listing});
 });
 
-export const updateListingOnboardingStep = asyncHandler(async(req:Request, res:Response) => {
+export const updateListingStatus = asyncHandler(async(req:Request, res:Response) => {
     if(!req.user) {
         res.status(401).json({ success: false, message: "Unauthorized access" });
         return;
     }
-    const validatedData = updateStepSchema.parse({ params:req.params, body:req.body });
-    const authContext = {sub:req.user.sub, firm_id:req.user.firm_id
-    };
-    const listing = await listingOnboardingService.updateStep(validatedData.params.id, validatedData.body.current_step, authContext);
-    res.status(200).json({success: true, message: "Listing step updated successfully.", data: listing});
+    const validatedData = listingActionSchema.parse({ params:req.params, body:req.body });
+    const authContext = {sub:req.user.sub, firm_id:req.user.firm_id};
+    const listing = await listingOnboardingService.updateListingStatus(validatedData.params.id, validatedData.body.action, validatedData.body.remark, authContext);
+    res.status(200).json({success: true, message: "Listing status updated successfully.", data: listing});
 });

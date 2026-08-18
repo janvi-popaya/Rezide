@@ -21,7 +21,7 @@ export const statusHistorySchema = z.object({
   remark: z.string().default(""),
   updated_by: z.object({
     name: requiredString("Updated By Name"),
-    user_id: objectIdSchema
+    user_id: z.string().trim().min(1, "User ID is required")
   }),
   timestamp: z.any()
 });
@@ -36,11 +36,11 @@ export const listingDetailsSchema = z.object({
   locality: requiredString("Locality"),
   listing_city: requiredString("Listing city"),
 
-  project: objectIdSchema,
-  tower: objectIdSchema,
-  unit_no: objectIdSchema,
+  project: z.string().optional(),
+  tower: z.string().optional(),
+  unit_no: z.string().optional(),
   floor_no: requiredString("Floor number"),
-  combine_unit_no: z.array(objectIdSchema).default([]),
+  combine_unit_no: z.array(z.string()).default([]),
   UnitFloorPosition: z.nativeEnum(UnitFloorPosition),
 
   towerHide: z.boolean().default(false),
@@ -51,7 +51,7 @@ export const listingDetailsSchema = z.object({
 
   isCustomUnit: z.boolean().default(false),
   is_custom_unit: z.boolean().default(false),
-  selected_unit_id: objectIdSchema,
+  selected_unit_id: z.string().optional(),
   selected_unit_no: requiredString("Selected unit number"),
   share: z.boolean().default(true),
 
@@ -81,8 +81,8 @@ export const listingDetailsSchema = z.object({
   service_lifts: nonNegativeNumber,
   total_floor: optionalString,
 
-  flooring: objectIdSchema,
-  bhk: objectIdSchema,
+  flooring: z.string().optional(),
+  bhk: z.string().optional(),
 
   no_of_balconies: requiredString("Number of balconies"),
   no_of_bathrooms: requiredString("Number of bathrooms"),
@@ -94,7 +94,7 @@ export const listingDetailsSchema = z.object({
 // Commercial Details Sub-schema
 export const commercialDetailsSchema = z.object({
   property_purpose: z.nativeEnum(PropertyPurpose),
-  availability_status: objectIdSchema,
+  availability_status: z.string().optional(),
   available_from: z.coerce.date().optional().nullable(),
   current_occupation_status: z.nativeEnum(CurrentOccupancy),
 
@@ -103,7 +103,7 @@ export const commercialDetailsSchema = z.object({
   start_time: requiredString("Start time"),
   end_time: requiredString("End time"),
 
-  parking_type: objectIdSchema,
+  parking_type: z.string().optional(),
 
   monthly_rent: nonNegativeNumber,
   discount_price: nonNegativeNumber,
@@ -114,8 +114,8 @@ export const commercialDetailsSchema = z.object({
   avg_rate_per_sqft: z.coerce.number().min(0),
 
   brokerage_charge: nonNegativeNumber,
-  furnishing: objectIdSchema,
-  tenantsPreferred: objectIdSchema,
+  furnishing: z.string().optional(),
+  tenantsPreferred: z.string().optional(),
 
   transfer_charges: nonNegativeNumber,
   move_in_charges: nonNegativeNumber,
@@ -144,12 +144,12 @@ export const commercialDetailsSchema = z.object({
   servant_quarters: z.string().default(""),
   lawn_area: z.string().default(""),
   internal_notes: z.string().default(""),
-  availablility_status: objectIdSchema
+  availablility_status: z.string().optional()
 });
 
 export const brokerAndAgentSchema = z.object({
-  broker_id: objectIdSchema,
-  firm_id: objectIdSchema
+  broker_id: z.string().optional(),
+  firm_id: z.string().optional()
 });
 
 export const listingPropertyDetailsSchema = z.object({
@@ -176,12 +176,21 @@ export const propertyDetailsPartialSchema = listingPropertyDetailsSchema.partial
 export const listingAddressPartialSchema = listingAddressSchema.partial();
 
 export const updateListingDetailsSchema = z.object({
+  current_step: z.nativeEnum(OnboardingStep).optional(),
   listing_details: listingDetailsPartialSchema.optional(),
   commercial_details: commercialDetailsPartialSchema.optional(),
   property_details: propertyDetailsPartialSchema.optional(),
   listing_address: listingAddressPartialSchema.optional(),
-  broker_and_agent: brokerAndAgentSchema.partial().optional()
-});
+  broker_and_agent: brokerAndAgentSchema.partial().optional(),
+  key_features: z.array(z.string()).optional(),
+  amenities: z.array(z.any()).optional(),
+  furnishingAmenities: z.array(z.any()).optional(),
+  apartmentAmenities: z.array(z.string()).optional(),
+  images: z.record(z.string(), z.any()).optional(),
+  video: z.any().nullable().optional(),
+  vrTour: z.string().optional(),
+  coverImageKey: z.string().optional(),
+}).strict();
 
 // Root Listing Schema
 export const rootListingSchema = z.object({
@@ -223,11 +232,53 @@ export const rootListingSchema = z.object({
 });
 
 // Request Route Schemas
+const essentialCreatePayloadSchema = z.object({
+  listing_type: z.nativeEnum(ListingType),
+  current_step: z.nativeEnum(OnboardingStep).optional(),
+  _id: objectIdSchema.optional(),
+
+  listing_details: listingDetailsPartialSchema.optional(),
+  commercial_details: commercialDetailsPartialSchema.optional(),
+  property_details: propertyDetailsPartialSchema.optional(),
+  listing_address: listingAddressPartialSchema.optional(),
+
+  unit_type: z.nativeEnum(HomeUnitType).optional(),
+  share: z.boolean().optional(),
+
+  availability_status: z.string().optional(),
+  available_from: z.string().datetime({ offset: true }).or(z.string().date()).optional(),
+  property_purpose: z.nativeEnum(PropertyPurpose).optional(),
+  property_price: z.coerce.number().min(0).optional(),
+
+  project: z.string().optional(),
+  project_name: z.string().optional(),
+  line_1: z.string().optional(),
+  region: z.string().optional(),
+  subregion: z.string().optional(),
+  locality: z.string().optional(),
+  listing_city: z.string().optional(),
+  city: z.string().optional(),
+  pincode: z.coerce.number().optional(),
+
+  tower: z.string().optional(),
+  total_floor: z.string().optional(),
+  unit_no: z.string().optional(),
+  floor_no: z.string().optional(),
+  UnitFloorPosition: z.nativeEnum(UnitFloorPosition).optional(),
+
+  listing_name: z.string().optional(),
+  property_status: z.nativeEnum(PropertyStatus).optional(),
+  possession_timeline: z.nativeEnum(PossessionTimeline).optional(),
+  project_type: z.nativeEnum(ProjectType).optional(),
+  plot_area: z.string().optional(),
+  area_unit_type: z.nativeEnum(AreaUnitType).optional(),
+
+  no_of_passengers_lifts: z.coerce.number().min(0).optional(),
+  no_of_service_lifts: z.coerce.number().min(0).optional(),
+}).strict();
+
 export const createListingInitSchema = z.object({
-  body: z.object({
-    listing_type: z.nativeEnum(ListingType),
-    _id: objectIdSchema.optional()
-  })
+  body: essentialCreatePayloadSchema
 });
 
 export const createListingSchema = createListingInitSchema.shape.body;
@@ -241,21 +292,14 @@ export const updateListingSchema = z.object({
   body: updateListingDetailsSchema
 });
 
-export const submitListingSchema = z.object({
-  params: listingIdParamSchema
-});
-
-export const updateStepSchema = z.object({
-  params: listingIdParamSchema,
-  body: z.object({
-    current_step: z.nativeEnum(OnboardingStep)
-  })
-});
+// export const submitListingSchema = z.object({
+//   params: listingIdParamSchema
+// });
 
 export const listingActionSchema = z.object({
   params: listingIdParamSchema,
   body: z.object({
-    action: requiredString("action"),
+    action: z.nativeEnum(ListingStatus),
     remark: z.string().trim().optional()
   })
 });

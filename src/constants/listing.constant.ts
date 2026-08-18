@@ -42,11 +42,13 @@ export enum LandUnitType{
 }
 // listing status
 export enum ListingStatus{
-    AWAITING_APPROVAL = "Awaiting Approval",
     WORK_IN_PROGRESS = "Work In Progress",
+    PENDING = "Pending",
+    APPROVED = "Approved",
     REJECTED = "Rejected",
     DELISTED = "Delisted",
-    APPROVED = "Approved",
+    RELISTED = "Relisted",
+    DELETED = "Deleted",
 }
 export enum OnboardingStep {
     ESSENTIAL = "Essential",

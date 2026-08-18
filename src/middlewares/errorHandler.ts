@@ -14,6 +14,14 @@ export const errorHandler = (error: Error, req:Request, res:Response, next:NextF
         return res.status(error.statusCode).json({success:false, message:error.message})
     }
 
+    const maybeStatusError = error as Error & { statusCode?: number };
+    if (typeof maybeStatusError.statusCode === "number") {
+        return res.status(maybeStatusError.statusCode).json({
+            success: false,
+            message: maybeStatusError.message
+        });
+    }
+
     const castError = error as Error & { name?: string };
     if (castError.name === "CastError") {
         return res.status(400).json({ success: false, message: "Invalid id" });

@@ -15,7 +15,10 @@ const StatusHistorySchema = new Schema(
   {
     code: { type: String, enum: Object.values(ListingStatus) },
     remark: { type: String, default: "" },
-    updated_by: { name: String, user_id: { type: Schema.Types.ObjectId } },
+    updated_by: {
+      name: { type: String, default: "" },
+      user_id: { type: String, default: "" }
+    },
     timestamp: { type: Schema.Types.Mixed }
   },
   { _id: true }
@@ -32,11 +35,11 @@ const ListingDetailsSchema = new Schema(
     locality: String,
     listing_city: String,
 
-    project: { type: Schema.Types.ObjectId },
-    tower: { type: Schema.Types.ObjectId },
-    unit_no: { type: Schema.Types.ObjectId },
+    project: String,
+    tower: String,
+    unit_no: String,
     floor_no: String,
-    combine_unit_no: [{ type: Schema.Types.ObjectId }],
+    combine_unit_no: [String],
     UnitFloorPosition: { type: String, enum: Object.values(UnitFloorPosition) },
 
     towerHide: { type: Boolean, default: false },
@@ -47,7 +50,7 @@ const ListingDetailsSchema = new Schema(
 
     isCustomUnit: { type: Boolean, default: false },
     is_custom_unit: { type: Boolean, default: false },
-    selected_unit_id: { type: Schema.Types.ObjectId },
+    selected_unit_id: String,
     selected_unit_no: String,
     share: { type: Boolean, default: true },
 
@@ -77,8 +80,8 @@ const ListingDetailsSchema = new Schema(
     service_lifts: Number,
     total_floor: String,
 
-    flooring: { type: Schema.Types.ObjectId },
-    bhk: { type: Schema.Types.ObjectId },
+    flooring: String,
+    bhk: String,
 
     no_of_balconies: String,
     no_of_bathrooms: String,
@@ -93,7 +96,7 @@ const ListingDetailsSchema = new Schema(
 const CommercialDetailsSchema = new Schema(
   {
     property_purpose: { type: String, enum: Object.values(PropertyPurpose) },
-    availability_status: { type: Schema.Types.ObjectId },
+    availability_status: String,
     available_from: Date,
     current_occupation_status: { type: String, enum: Object.values(CurrentOccupancy) },
 
@@ -102,7 +105,7 @@ const CommercialDetailsSchema = new Schema(
     start_time: String,
     end_time: String,
 
-    parking_type: { type: Schema.Types.ObjectId },
+    parking_type: String,
 
     monthly_rent: { type: Number, default: 0 },
     discount_price: { type: Number, default: 0 },
@@ -113,8 +116,8 @@ const CommercialDetailsSchema = new Schema(
     avg_rate_per_sqft: Number,
 
     brokerage_charge: { type: Number, default: 0 },
-    furnishing: { type: Schema.Types.ObjectId },
-    tenantsPreferred: { type: Schema.Types.ObjectId },
+    furnishing: String,
+    tenantsPreferred: String,
 
     transfer_charges: { type: Number, default: 0 },
     move_in_charges: { type: Number, default: 0 },
@@ -155,8 +158,8 @@ const CommercialDetailsSchema = new Schema(
 // Broker & Agent
 const BrokerAndAgentSchema = new Schema(
   {
-    broker_id: { type: Schema.Types.ObjectId },
-    firm_id: { type: Schema.Types.ObjectId }
+    broker_id: String,
+    firm_id: String
   },
   noIdOption
 );
@@ -198,7 +201,6 @@ const listingOnboardingSchema = new Schema(
       type: String,
       enum: Object.values(OnboardingStep),
       default: OnboardingStep.ESSENTIAL,
-      required: true
     },
 
     // Listing Basic Information
@@ -238,8 +240,10 @@ const listingOnboardingSchema = new Schema(
     vrTour: { type: String, default: "" },
 
     // Broker / Firm Information
-    firm_name: String,
-    broker_name: String,
+    // firm_name: String,
+    // broker_name: String,
+    firm_name:{ type: Schema.Types.ObjectId },
+    
 
     // SEO / Personalization
     is_personalized: { type: Boolean, default: false },
