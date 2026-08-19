@@ -3,6 +3,8 @@ import { ZodError } from "zod";
 import { ApiError } from "../utils/apiError.js";
 
 export const errorHandler = (error: Error, req:Request, res:Response, next:NextFunction)=>{
+    console.error("[ERROR]", error.name, error.message);
+    
     if (error instanceof ZodError) {
         return res.status(400).json({
             success: false,
@@ -22,8 +24,9 @@ export const errorHandler = (error: Error, req:Request, res:Response, next:NextF
         });
     }
 
-    const castError = error as Error & { name?: string };
+    const castError = error as Error & { name?: string; kind?: string; path?: string };
     if (castError.name === "CastError") {
+        console.error("[CastError]", castError.path, castError.kind);
         return res.status(400).json({ success: false, message: "Invalid id" });
     }
 

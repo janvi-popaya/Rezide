@@ -16,37 +16,31 @@ class ListingService {
         return `LST${number}`;
     }
 
+    // $ values not allowed ($set)
     private rejectMongoOperatorKeys(obj: Record<string, any>, path = "root"): void {
         for (const [key, value] of Object.entries(obj)) {
             if (key.startsWith("$")) {
                 throw new ApiError(400, `Invalid update field: ${key} is not allowed.`);
             }
-
             if (value && typeof value === "object" && !Array.isArray(value)) {
                 this.rejectMongoOperatorKeys(value, `${path}.${key}`);
             }
         }
     }
-
+    // safely update using the dot notation
     private flattenUpdateData(obj: Record<string, any>, prefix = ""): Record<string, any> {
         const result: Record<string, any> = {};
-
         for (const [key, value] of Object.entries(obj)) {
             if (value === undefined) continue;
-
             const fieldPath = prefix ? `${prefix}.${key}` : key;
-
             if (value && typeof value === "object" && !Array.isArray(value)) {
                 Object.assign(result, this.flattenUpdateData(value, fieldPath));
                 continue;
             }
-
             result[fieldPath] = value;
         }
-
         return result;
     }
-
     async createListing(validatedData:CreateListingInitInput, authContext: AuthContext) {
         if (!authContext.sub) {
             throw new ApiError(401, "User authentication required");
@@ -54,7 +48,6 @@ class ListingService {
         if (!authContext.firm_id) {
             throw new ApiError(400, "Firm information missing");
         }
-
         const existingListing = await Listings.findOne({ sub: authContext.sub, firm_id: authContext.firm_id });
         if (existingListing) {
             return { existing: true, listing: existingListing };
@@ -113,6 +106,7 @@ class ListingService {
             pincode: validatedData.listing_address?.pincode ?? validatedData.pincode
         };
 
+        // Remove undefined values during creation
         Object.keys(listingDetails).forEach((key) => {
             if ((listingDetails as any)[key] === undefined) delete (listingDetails as any)[key];
         });
@@ -191,7 +185,7 @@ class ListingService {
                 firm_id: authContext.firm_id
             },
             { $set: setData },
-            { new: true }
+            { returnDocument: 'after' as any, runValidators: false }
         );
 
         if (!listing) {
@@ -228,12 +222,11 @@ class ListingService {
             code: status,
             remark: remark || "",
             updated_by: {
-                name: "Current User",
+                name: "System Update",
                 user_id: String(authContext.sub)
             },
             timestamp: new Date()
         };
-
         const updatedListing = await Listings.findOneAndUpdate(
             {
                 _id: listingId,
@@ -241,7 +234,7 @@ class ListingService {
                 firm_id: authContext.firm_id
             },
             { $push: { status: statusEntry } },
-            { new: true }
+            { returnDocument: 'after' as any, runValidators: false }
         );
 
         if (!updatedListing) {

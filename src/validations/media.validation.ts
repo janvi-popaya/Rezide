@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { objectIdSchema } from "./listing.validation.js";
+const objectIdSchema = z.string().trim().regex(/^[a-f\d]{24}$/i, "Invalid ObjectId");
 
 // Orientation
 export const mediaOrientationEnum = z.enum(["portrait", "landscape", "unknown"]);

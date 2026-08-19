@@ -15,9 +15,9 @@ export const validate =
         params?: unknown;
       };
 
-      (req as any).body = parsed.body ?? req.body;
-      (req as any).query = parsed.query ?? req.query;
-      (req as any).params = parsed.params ?? req.params;
+      if (parsed.body !== undefined) (req as any).body = parsed.body;
+      if (parsed.params !== undefined) (req as any).params = parsed.params;
+      // Note: req.query is read-only in Express, so we don't reassign it
 
       next();
     } catch (error) {

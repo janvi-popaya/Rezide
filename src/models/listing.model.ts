@@ -11,19 +11,18 @@ import {
 const noIdOption = { _id: false };
 
 // Status History
-const StatusHistorySchema = new Schema(
-  {
-    code: { type: String, enum: Object.values(ListingStatus) },
-    remark: { type: String, default: "" },
-    updated_by: {
-      name: { type: String, default: "" },
-      user_id: { type: String, default: "" }
-    },
-    timestamp: { type: Schema.Types.Mixed }
-  },
-  { _id: true }
-);
-
+// const StatusHistorySchema = new Schema(
+//   {
+//     code: { type: String, enum: Object.values(ListingStatus) },
+//     remark: { type: String, default: "" },
+//     updated_by: {
+//       name: { type: String, default: "" },
+//       user_id: { type: String, default: "" }
+//     },
+//     timestamp: { type: Schema.Types.Mixed }
+//   },
+//   { _id: true }
+// );
 // Listing Details
 const ListingDetailsSchema = new Schema(
   {
@@ -56,6 +55,7 @@ const ListingDetailsSchema = new Schema(
 
     building_status: String,
     building_age: Number,
+    structure: String, //newOne
     area: Number,
     area_type: { type: String, enum: Object.values(AreaType) },
 
@@ -81,13 +81,36 @@ const ListingDetailsSchema = new Schema(
     total_floor: String,
 
     flooring: String,
+    flooring_type: String, //newOne
     bhk: String,
+    bhk_type:String, //newOne
 
     no_of_balconies: String,
     no_of_bathrooms: String,
     no_of_lifts: String,
     no_of_parkings: String,
-    parking_details: { type: String, default: "" }
+    parking_details: { type: String, default: "" },
+
+    //newOnes
+    parking_type:String,
+    furnishing: String,
+    furnishing_type: String,
+    cross_ventilation: {type: String, enum: Object.values(CrossVentilation), required:false},
+    natural_light: {type: String, enum: Object.values(NaturalLight), required:false},
+    vastu_compliant: {type: String,enum: Object.values(VastuCompliant)},
+    pets_allowed: {type: String,enum: Object.values(PetsAllowed)},
+    ceiling_height: String,
+    ceiling_height_side: String,
+    boundary_wall_type: String,
+    boundary_wall_height: String,
+    boundary_wall_height_side: String,
+    // Gate
+    gate_type: String,
+    gate_height: String,
+    gate_height_side: String,
+    // Villa / independent house type fields
+    servant_quarters: String,
+    lawn_area: String
   },
   noIdOption
 );
@@ -105,8 +128,6 @@ const CommercialDetailsSchema = new Schema(
     start_time: String,
     end_time: String,
 
-    parking_type: String,
-
     monthly_rent: { type: Number, default: 0 },
     discount_price: { type: Number, default: 0 },
     security_amount: { type: Number, default: 0 },
@@ -116,7 +137,7 @@ const CommercialDetailsSchema = new Schema(
     avg_rate_per_sqft: Number,
 
     brokerage_charge: { type: Number, default: 0 },
-    furnishing: String,
+    
     tenantsPreferred: String,
 
     transfer_charges: { type: Number, default: 0 },
@@ -124,33 +145,31 @@ const CommercialDetailsSchema = new Schema(
     registration_charges: { type: Number, default: 0 },
     stamp_duty: { type: Number, default: 0 },
 
-    pets_allowed: { type: String, enum: Object.values(PetsAllowed) },
-    brokerage_terms: { type: String, enum: Object.values(BrokerageTerms) },
+    // pets_allowed: { type: String, enum: Object.values(PetsAllowed) },
+    // brokerage_terms: { type: String, enum: Object.values(BrokerageTerms) },
 
-    ceiling_height: { type: String, default: "0" },
-    ceiling_height_side: { type: String, default: "0" },
+    // ceiling_height: { type: String, default: "0" },
+    // ceiling_height_side: { type: String, default: "0" },
 
     maintain_charges: { type: Number, default: 0 },
     maintenance_included: { type: String, default: "" },
 
-    notice_needed: { type: String, enum: Object.values(NoticeNeededDuration), default: "" },
-    vastu_compliant: { type: String, enum: Object.values(VastuCompliant), default: "" },
-    cross_ventilation: { type: String, enum: Object.values(CrossVentilation), default: "" },
-    natural_light: { type: String, enum: Object.values(NaturalLight), default: "" },
+    notice_needed: { type: String, enum: Object.values(NoticeNeededDuration), required:false },
+    // vastu_compliant: { type: String, enum: Object.values(VastuCompliant), default: "" },
+    // cross_ventilation: { type: String, enum: Object.values(CrossVentilation), default: "" },
+    // natural_light: { type: String, enum: Object.values(NaturalLight), default: "" },
 
-    boundary_wall_type: { type: String, default: "" },
-    boundary_wall_height: { type: String, default: "" },
-    boundary_wall_height_side: { type: String, default: "" },
+    // boundary_wall_type: { type: String, default: "" },
+    // boundary_wall_height: { type: String, default: "" },
+    // boundary_wall_height_side: { type: String, default: "" },
 
-    gate_type: { type: String, default: "" },
-    gate_height: { type: String, default: "" },
-    gate_height_side: { type: String, default: "" },
+    // gate_type: { type: String, default: "" },
+    // gate_height: { type: String, default: "" },
+    // gate_height_side: { type: String, default: "" },
 
-    servant_quarters: { type: String, default: "" },
-    lawn_area: { type: String, default: "" },
-    internal_notes: { type: String, default: "" },
-
-    availablility_status: { type: Schema.Types.ObjectId }
+    // servant_quarters: { type: String, default: "" },
+    // lawn_area: { type: String, default: "" },
+    internal_notes: { type: String, default: "" }
   },
   noIdOption
 );
@@ -221,7 +240,7 @@ const listingOnboardingSchema = new Schema(
     apartmentAmenities: { type: [String], default: [] },
 
     // Status History
-    status: { type: [StatusHistorySchema], default: [] },
+    // status: { type: [StatusHistorySchema], default: [] },
 
     // Onboarding Flags
     onboarding_type: { type: String, default: "normal" },
@@ -236,14 +255,12 @@ const listingOnboardingSchema = new Schema(
 
     // Media
     coverImageKey: { type: String, default: "" },
-    video: { type: Schema.Types.Mixed, default: null },
+    // video: { type: Schema.Types.Mixed, default: null },
     vrTour: { type: String, default: "" },
 
     // Broker / Firm Information
-    // firm_name: String,
-    // broker_name: String,
-    firm_name:{ type: Schema.Types.ObjectId },
-    
+    firm_name: String,
+    broker_name: String,
 
     // SEO / Personalization
     is_personalized: { type: Boolean, default: false },
