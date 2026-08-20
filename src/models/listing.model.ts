@@ -10,19 +10,6 @@ import {
 // Helper for Schema options
 const noIdOption = { _id: false };
 
-// Status History
-// const StatusHistorySchema = new Schema(
-//   {
-//     code: { type: String, enum: Object.values(ListingStatus) },
-//     remark: { type: String, default: "" },
-//     updated_by: {
-//       name: { type: String, default: "" },
-//       user_id: { type: String, default: "" }
-//     },
-//     timestamp: { type: Schema.Types.Mixed }
-//   },
-//   { _id: true }
-// );
 // Listing Details
 const ListingDetailsSchema = new Schema(
   {
