@@ -2,6 +2,7 @@ import { z } from "zod";
 import * as Constants from "../constants/index.constant.js";
 import { objectIdSchema, listingIdSchema, requiredString } from "./common.validation.js";
 import { imagesSchema, videoItemSchema } from "./media.validation.js";
+import { ApiError } from "../utils/apiError.js";
 
 // Helpers & Base Schemas
 const optionalString = z.string().trim().optional();
@@ -80,7 +81,8 @@ export const seoSchema = z.record(z.string(), z.any());
 
 // Field Registry
 const listingFieldSchemas = {
-  listing_type: z.nativeEnum(Constants.ListingType),
+  listing_type: z.nativeEnum(Constants.ListingType), 
+  current_step: z.nativeEnum(Constants.OnboardingStep),
   onboarding_type: z.string(), isCustomUnit: z.boolean(), is_custom_unit: z.boolean(),
   selected_unit_id: z.string(), selected_unit_no: z.string(), coverImageKey: z.string(),
   firm_name: z.string(), broker_name: z.string(), vrTour: z.string(),
@@ -103,24 +105,24 @@ export const validateListingData = (data: Record<string, any>) => {
     const parent = parts.shift();
     const childPath = parts.join(".");
 
-    if (!parent) throw new Error(`Invalid field: ${key}`);
+    if (!parent) throw new ApiError(400, `Invalid field: ${key}`);
 
     const parentSchema = listingFieldSchemas[parent as keyof typeof listingFieldSchemas];
-    if (!parentSchema) throw new Error(`Invalid field: ${key}`);
+    if (!parentSchema) throw new ApiError(400, `Invalid field: ${key}`);
     let fieldSchema: z.ZodTypeAny = parentSchema;
 
     if (childPath) {
       if (!(parentSchema instanceof z.ZodObject)) {
-        throw new Error(`Invalid nested field: ${key}`);
+        throw new ApiError(400, `Invalid nested field: ${key}`);
       }
       const shape = parentSchema.shape as Record<string, z.ZodTypeAny>;
       const childSchema = shape[childPath];
-      if (!childSchema) throw new Error(`Invalid field: ${key}`);
+      if (!childSchema) throw new ApiError(400, `Invalid field: ${key}`);
       fieldSchema = childSchema;
     }
     const result = fieldSchema.safeParse(value);
     if (!result.success) {
-      throw new Error(result.error.issues[0]?.message ?? `Invalid value for ${key}`);
+      throw new ApiError(400, result.error.issues[0]?.message ?? `Invalid value for ${key}`);
     }
   }
   return data;
