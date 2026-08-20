@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { createListingSchema, objectIdSchema, listingActionSchema} from "../validations/index.validation.js";
 import listingService from "../services/listing.service.js";

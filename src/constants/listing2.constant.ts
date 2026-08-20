@@ -14,74 +14,74 @@ export enum AreaUnitType {
   SQM = "sqm",
 }
 export enum CrossVentilation {
-  YES = "Yes",
-  NO = "No",
+  YES = "yes",
+  NO = "no",
 }
 export enum NaturalLight {
-  YES = "Yes",
-  NO = "No",
+  YES = "yes",
+  NO = "no",
 }
 export enum VastuCompliant {
-  YES = "Yes",
-  NO = "No",
+  YES = "yes",
+  NO = "no",
 }
 export enum PetsAllowed {
   YES = "yes",
   NO = "no",
 }
 export enum FurnishingType{
-  BARE_SHELL = "Bare Shell",
-  BUILDER_CONDITION = "Builder Condition",
-  UNFURNISHED = "Unfurnished",
-  SEMI_FURNISHED = "Semi Furnished",
-  FULL_FURNISHED = "Fully Furnished",
+  BARE_SHELL = "bare_shell",
+  BUILDER_CONDITION = "builder_condition",
+  UNFURNISHED = "unfurnished",
+  SEMI_FURNISHED = "semi_furnished",
+  FULL_FURNISHED = "fully_furnished",
 }
 export enum ParkingType {
-  COVERED = "Covered",
-  OPEN = "Open",
-  LIFT = "Lift",
-  NOT_DEFINED = "Not Defined",
-  STACK = "Stack",
-  TANDEM = "Tandem",
+  COVERED = "covered",
+  OPEN = "open",
+  LIFT = "lift",
+  NOT_DEFINED = "not_defined",
+  STACK = "stack",
+  TANDEM = "tandem",
 }
 export enum VisitDay {
-  EVERYDAY = "Everyday",
-  WEEKDAY = "Weekday",
-  WEEKEND = "Weekend",
-  PARTICULAR_DAY = "Particular Day",
+  EVERYDAY = "everyday",
+  WEEKDAY = "weekday",
+  WEEKEND = "weekend",
+  PARTICULAR_DAY = "particular_day",
 }
 export enum Day {
-  SUNDAY = "Sunday",
-  MONDAY = "Monday",
-  TUESDAY = "Tuesday",
-  WEDNESDAY = "Wednesday",
-  THURSDAY = "Thursday",
-  FRIDAY = "Friday",
-  SATURDAY = "Saturday",
+  SUNDAY = "sunday",
+  MONDAY = "monday",
+  TUESDAY = "tuesday",
+  WEDNESDAY = "wednesday",
+  THURSDAY = "thursday",
+  FRIDAY = "friday",
+  SATURDAY = "saturday",
 }
 export enum BrokerageTerms{
-  SIDE_BY_SIDE = "Side By Side",
-  PLUS_ONE = "Plus 1",
-  DISCUSS = "Discuss",
+  SIDE_BY_SIDE = "side_by_side",
+  PLUS_ONE = "plus_1",
+  DISCUSS = "discuss",
 }
 export enum NoticeNeededDuration{
-  NONE = "None",
-  ONE_HOUR = "1 Hour",
-  TWO_HOURS = "2 Hours",
-  SAME_DAY = "Same Day",
-  ONE_DAY = "1 Day",
+  NONE = "none",
+  ONE_HOUR = "1_hour",
+  TWO_HOURS = "2_hours",
+  SAME_DAY = "same_day",
+  ONE_DAY = "1_day",
 }
 export enum CurrentOccupancy{
-  OWNER_OCCUPIED = "Owner Occupied",
-  TENANT_OCCUPIED = "Tenant Occupied",
-  VACANT_WITH_KEYS = "Vacant With Keys",
-  VACANT_WITHOUT_KEYS = "Vacant Without Keys",
-  UNDER_CONSTRUCTION = "Under Construction",
+  OWNER_OCCUPIED = "owner_occupied",
+  TENANT_OCCUPIED = "tenant_occupied",
+  VACANT_WITH_KEYS = "vacant_with_keys",
+  VACANT_WITHOUT_KEYS = "vacant_without_keys",
+  UNDER_CONSTRUCTION = "under_construction",
 }
 export enum AreaType{
-  USABLE_CARPET = "Usable Carpet",
-  RERA_CARPET = "Rera Carpet",
-  MOFA_CARPET = "Mofa Carpet",
-  BUILT_UP = "Built Up",
-  TOTAL_SELLABLE = "Total Sellable"
+  USABLE_CARPET = "usable_carpet",
+  RERA_CARPET = "rera_carpet",
+  MOFA_CARPET = "mofa_carpet",
+  BUILT_UP = "built_up",
+  TOTAL_SELLABLE = "total_sellable"
 }

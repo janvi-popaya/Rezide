@@ -7,54 +7,54 @@ export enum ListingType {
 }
 // listing sub types...
 export enum HomeUnitType {
-  STUDIO = "Studio",
-  APARTMENT = "Apartment",
-  DUPLEX = "Duplex",
-  PENTHOUSE = "Penthouse",
-  JODI = "Jodi",
-  INDEPENDENT_FLOOR = "Independent Floor",
-  INDEPENDENT_HOUSE = "Independent House",
-  VILLA = "Villa",
-  HOLIDAY_HOME = "Holiday Home",
-  ROW_TOWN_HOUSE = "Row/Town House",
+  STUDIO = "studio",
+  APARTMENT = "apartment",
+  DUPLEX = "duplex",
+  PENTHOUSE = "penthouse",
+  JODI = "jodi",
+  INDEPENDENT_FLOOR = "independent_floor",
+  INDEPENDENT_HOUSE = "independent_house",
+  VILLA = "villa",
+  HOLIDAY_HOME = "holiday_home",
+  ROW_TOWN_HOUSE = "row/town_house",
 }
 export enum OfficeUnitType {
-    INDEPENDENT_HOUSE = "Independent House",
-    INDEPENDENT_BUILDING = "Independent Building",
+    INDEPENDENT_HOUSE = "independent_house",
+    INDEPENDENT_BUILDING = "independent_building",
 }
 export enum IndustrialUnitType {
-    WAREHOUSE = "Warehouse",
-    DARKSTORE = "Darkstore",
-    SHED = "Shed",
-    GODOWN = "Godown",
-    IN_BUILDING = "Inbuilding",
+    WAREHOUSE = "warehouse",
+    DARKSTORE = "darkstore",
+    SHED = "shed",
+    GODOWN = "godown",
+    IN_BUILDING = "inbuilding",
 }
 export enum RetailUnitType{
-    SHOP = "Shop",
-    SHOWROOM = "Showroom",
+    SHOP = "shop",
+    SHOWROOM = "showroom",
 }
 export enum LandUnitType{
-    RESIDENTIAL_PLOT = "Residential Plot",
-    COMMERCIAL_LAND = "Commercial Land",
-    AGRICULTURE_LAND = "Agriculture Land",
-    INDUSTRIAL_LAND = "Industrial Land",
-    FARM_HOUSE = "Farm House",
+    RESIDENTIAL_PLOT = "residential_plot",
+    COMMERCIAL_LAND = "commercial_land",
+    AGRICULTURE_LAND = "agriculture_land",
+    INDUSTRIAL_LAND = "industrial_land",
+    FARM_HOUSE = "farm_house",
 }
 // listing status
 export enum ListingStatus{
-    WORK_IN_PROGRESS = "Work In Progress",
-    PENDING = "Pending",
-    APPROVED = "Approved",
-    REJECTED = "Rejected",
-    DELISTED = "Delisted",
-    RELISTED = "Relisted",
-    DELETED = "Deleted",
+    WORK_IN_PROGRESS = "work_in_progress",
+    PENDING = "pending",
+    APPROVED = "approved",
+    REJECTED = "rejected",
+    DELISTED = "delisted",
+    RELISTED = "relisted",
+    DELETED = "deleted",
 }
 export enum OnboardingStep {
-    ESSENTIAL = "Essential",
-    DETAILS = "Details",
-    KEY_FEATURES = "Key features",
-    IMAGES = "Images",
-    VIDEOS = "Videos",
-    AMENITIES = "Amenities"
+    ESSENTIAL = "essential",
+    DETAILS = "details",
+    KEY_FEATURES = "key_features",
+    IMAGES = "images",
+    VIDEOS = "videos",
+    AMENITIES = "amenities"
 }
