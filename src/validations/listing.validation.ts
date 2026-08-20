@@ -93,7 +93,7 @@ const listingFieldSchemas = {
 } as const;
 
 // Dot Notation Validation
-const serverControlledFields = new Set(["_id", "sub", "firm_id", "listing_id", "current_step", "status"]);
+const serverControlledFields = new Set(["_id", "sub", "firm_id", "listing_id", "status"]);
 
 export const validateListingData = (data: Record<string, any>) => {
   for (const [key, value] of Object.entries(data)) {
@@ -107,28 +107,22 @@ export const validateListingData = (data: Record<string, any>) => {
 
     const parentSchema = listingFieldSchemas[parent as keyof typeof listingFieldSchemas];
     if (!parentSchema) throw new Error(`Invalid field: ${key}`);
-
     let fieldSchema: z.ZodTypeAny = parentSchema;
 
     if (childPath) {
       if (!(parentSchema instanceof z.ZodObject)) {
         throw new Error(`Invalid nested field: ${key}`);
       }
-
       const shape = parentSchema.shape as Record<string, z.ZodTypeAny>;
       const childSchema = shape[childPath];
-
       if (!childSchema) throw new Error(`Invalid field: ${key}`);
-
       fieldSchema = childSchema;
     }
-
     const result = fieldSchema.safeParse(value);
     if (!result.success) {
       throw new Error(result.error.issues[0]?.message ?? `Invalid value for ${key}`);
     }
   }
-
   return data;
 };
 

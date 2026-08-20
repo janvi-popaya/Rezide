@@ -27,7 +27,7 @@ class ListingService {
     //     return result;
     // }
     async saveListing(data: Record<string, any>, auth: AuthContext) {
-        const {_id, images, videos, sub, firm_id, listing_id, status, ...listingData } = data;
+        const {_id, images, videos, listing_id, status, ...listingData } = data;
         if (_id) {
             const listing = await Listings.findOneAndUpdate(
                 {
