@@ -79,7 +79,6 @@ const ListingDetailsSchema = new Schema(
     parking_details: { type: String, default: "" },
 
     //newOnes
-    parking_type:String,
     furnishing: String,
     furnishing_type: String,
     cross_ventilation: {type: String, enum: Object.values(CrossVentilation), required:false},
@@ -105,6 +104,7 @@ const ListingDetailsSchema = new Schema(
 // Commercial Details
 const CommercialDetailsSchema = new Schema(
   {
+    parking_type:String,
     property_purpose: { type: String, enum: Object.values(PropertyPurpose) },
     availability_status: String,
     available_from: Date,
@@ -133,7 +133,7 @@ const CommercialDetailsSchema = new Schema(
     stamp_duty: { type: Number, default: 0 },
 
     // pets_allowed: { type: String, enum: Object.values(PetsAllowed) },
-    // brokerage_terms: { type: String, enum: Object.values(BrokerageTerms) },
+    brokerage_terms: { type: String, enum: Object.values(BrokerageTerms) },
 
     // ceiling_height: { type: String, default: "0" },
     // ceiling_height_side: { type: String, default: "0" },

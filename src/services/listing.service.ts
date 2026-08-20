@@ -8,24 +8,24 @@ type AuthContext = {
     firm_id: string;
 };
 class ListingService {
-    private flatten(data: Record<string, any>, prefix = ""): Record<string, any> {
-        const result: Record<string, any> = {};
-        for (const [key, value] of Object.entries(data)) {
-            if (value === undefined) continue;
-            const path = prefix ? `${prefix}.${key}` : key;
-            if (
-                value !== null &&
-                typeof value === "object" &&
-                !Array.isArray(value) &&
-                !(value instanceof Date)
-            ) {
-                Object.assign(result, this.flatten(value, path));
-            } else {
-                result[path] = value;
-            }
-        }
-        return result;
-    }
+    // private flatten(data: Record<string, any>, prefix = ""): Record<string, any> {
+    //     const result: Record<string, any> = {};
+    //     for (const [key, value] of Object.entries(data)) {
+    //         if (value === undefined) continue;
+    //         const path = prefix ? `${prefix}.${key}` : key;
+    //         if (
+    //             value !== null &&
+    //             typeof value === "object" &&
+    //             !Array.isArray(value) &&
+    //             !(value instanceof Date)
+    //         ) {
+    //             Object.assign(result, this.flatten(value, path));
+    //         } else {
+    //             result[path] = value;
+    //         }
+    //     }
+    //     return result;
+    // }
     async saveListing(data: Record<string, any>, auth: AuthContext) {
         const {_id, images, videos, sub, firm_id, listing_id, status, ...listingData } = data;
         if (_id) {
@@ -35,9 +35,7 @@ class ListingService {
                     sub: auth.sub,
                     firm_id: auth.firm_id
                 },
-                {
-                    $set: this.flatten(listingData)
-                },
+                { $set:listingData },
                 {
                     new: true,
                     runValidators: true
@@ -48,13 +46,16 @@ class ListingService {
             }
             // Update media only when media data is provided
             if (images !== undefined || videos !== undefined) {
-                const mediaData = this.flatten({
-                    ...(images !== undefined && { images }),
-                    ...(videos !== undefined && { videos })
-                });
+                const mediaUpdate:Record<string, any> = {};
+                if(images!==undefined){
+                    mediaUpdate.images = images;
+                }
+                if(videos!==undefined){
+                    mediaUpdate.videos = videos;
+                }
                 await Media.findOneAndUpdate(
                     { listing_id: listing._id },
-                    { $set: mediaData },
+                    { $set: mediaUpdate },
                     {
                         upsert: true,
                         new: true

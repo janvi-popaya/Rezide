@@ -1,362 +1,143 @@
 import { z } from "zod";
-import {
-  ListingType, ListingStatus, HomeUnitType, UnitFloorPosition, ProjectType, PlotAreaUnitType,
-  PropertyStatus, PossessionTimeline, PropertyPurpose, Direction, AreaUnitType, PetsAllowed,
-  CurrentOccupancy, AreaType, VastuCompliant, CrossVentilation, NaturalLight, OnboardingStep
-} from "../constants/index.constant.js";
+import * as Constants from "../constants/index.constant.js";
+import { objectIdSchema, listingIdSchema, requiredString } from "./common.validation.js";
 import { imagesSchema, videoItemSchema } from "./media.validation.js";
 
-// Helpers
-export const objectIdSchema = z.string().trim().regex(/^[a-f\d]{24}$/i, "Invalid ObjectId");
-export const listingIdSchema = z.string().trim().length(10, "Custom listing_id must be exactly 10 characters");
-export const requiredString = (field: string) => z.string().trim().min(1, `${field} is required`);
-
-const nonNegativeNumber = z.coerce.number().min(0);
-const optionalString = z.string().trim().optional().nullable();
+// Helpers & Base Schemas
+const optionalString = z.string().trim().optional();
+const optionalNullableString = optionalString.nullable();
+const optionalNumber = z.coerce.number().optional();
+const nonNegativeNumber = z.coerce.number().min(0).optional();
+const optionalBoolean = z.boolean().optional();
+const optionalDate = z.coerce.date().optional();
 
 // Listing Details
 export const listingDetailsSchema = z.object({
-  listing_status: z.nativeEnum(ListingStatus).optional(),
-  listing_location: z.string().optional(),
-  region: z.string().optional(),
-  sub_region: z.string().optional(),
-  subregion: z.string().optional(),
-  locality: z.string().optional(),
-  listing_city: z.string().optional(),
-  project: z.string().optional(),
-  tower: z.string().optional(),
-  unit_no: z.string().optional(),
-  floor_no: z.string().optional(),
-  combine_unit_no: z.array(z.string()).default([]),
-  UnitFloorPosition: z.nativeEnum(UnitFloorPosition).optional(),
-  towerHide: z.boolean().default(false),
-  projectHide: z.boolean().default(false),
-  unitHide: z.boolean().default(false),
-  floorHide: z.boolean().default(false),
-  priceHide: z.boolean().default(false),
-  isCustomUnit: z.boolean().default(false),
-  is_custom_unit: z.boolean().default(false),
-  selected_unit_id: z.string().optional(),
-  selected_unit_no: z.string().optional(),
-  share: z.boolean().optional(),
-  building_status: z.string().optional(),
-  building_age: z.coerce.number().optional(),
-  structure: z.string().optional(),
+  listing_status: z.nativeEnum(Constants.ListingStatus).optional(),
+  listing_location: optionalString, region: optionalString, sub_region: optionalString, subregion: optionalString, locality: optionalString,
+  listing_city: optionalString, project: optionalString, tower: optionalString, unit_no: optionalString, floor_no: optionalString,
+  combine_unit_no: z.array(z.string()).optional(),
+  UnitFloorPosition: z.nativeEnum(Constants.UnitFloorPosition).optional(),
+  towerHide: optionalBoolean, projectHide: optionalBoolean, unitHide: optionalBoolean, floorHide: optionalBoolean, priceHide: optionalBoolean,
+  isCustomUnit: optionalBoolean, is_custom_unit: optionalBoolean, share: optionalBoolean,
+  selected_unit_id: optionalString, selected_unit_no: optionalString, building_status: optionalString, structure: optionalString,
+  building_age: optionalNumber,
   area: z.coerce.number().positive("Area must be greater than 0").optional(),
-  area_type: z.nativeEnum(AreaType).optional(),
-  listing_name: z.string().optional(),
-  entry_direction: z.nativeEnum(Direction).optional(),
-  exit_direction: z.nativeEnum(Direction).optional(),
-  view: z.string().optional(),
-  project_type: z.nativeEnum(ProjectType).optional(),
-  unit_type: z.nativeEnum(HomeUnitType).optional(),
-  property_sub_type: z.string().optional(),
-  area_unit_type: z.nativeEnum(AreaUnitType).optional().nullable(),
-  plot_area_unit_type: z.nativeEnum(PlotAreaUnitType).optional(),
-  plot_area: optionalString,
-  property_status: z.nativeEnum(PropertyStatus).optional(),
-  possession_timeline: z.nativeEnum(PossessionTimeline).optional(),
-  completion_date: z.coerce.date().optional(),
-  passenger_lifts: nonNegativeNumber.optional(),
-  service_lifts: nonNegativeNumber.optional(),
-  total_floor: optionalString,
-  flooring: z.string().optional(),
-  flooring_type: z.string().optional(),
-  bhk: z.string().optional(),
-  bhk_type: z.string().optional(),
-  no_of_balconies: z.string().optional(),
-  no_of_bathrooms: z.string().optional(),
-  no_of_lifts: z.string().optional(),
-  no_of_parkings: z.string().optional(),
-  parking_details: z.string().default(""),
-  parking_type: z.string().optional(),
-  furnishing: z.string().optional(),
-  furnishing_type: z.string().optional(),
-  cross_ventilation: z.nativeEnum(CrossVentilation).optional(),
-  natural_light: z.nativeEnum(NaturalLight).optional(),
-  vastu_compliant: z.nativeEnum(VastuCompliant).optional(),
-  pets_allowed: z.nativeEnum(PetsAllowed).optional(),
-  ceiling_height: z.string().optional(),
-  ceiling_height_side: z.string().optional(),
-  boundary_wall_type: z.string().optional(),
-  boundary_wall_height: z.string().optional(),
-  boundary_wall_height_side: z.string().optional(),
-  gate_type: z.string().optional(),
-  gate_height: z.string().optional(),
-  gate_height_side: z.string().optional(),
-  servant_quarters: z.string().optional(),
-  lawn_area: z.string().optional()
+  area_type: z.nativeEnum(Constants.AreaType).optional(),
+  listing_name: optionalString, view: optionalString, property_sub_type: optionalString,
+  entry_direction: z.nativeEnum(Constants.Direction).optional(),
+  exit_direction: z.nativeEnum(Constants.Direction).optional(),
+  project_type: z.nativeEnum(Constants.ProjectType).optional(),
+  unit_type: z.nativeEnum(Constants.HomeUnitType).optional(),
+  area_unit_type: z.nativeEnum(Constants.AreaUnitType).optional().nullable(),
+  plot_area_unit_type: z.nativeEnum(Constants.PlotAreaUnitType).optional(),
+  plot_area: optionalNullableString, total_floor: optionalNullableString,
+  property_status: z.nativeEnum(Constants.PropertyStatus).optional(),
+  possession_timeline: z.nativeEnum(Constants.PossessionTimeline).optional(),
+  completion_date: optionalDate,
+  passenger_lifts: nonNegativeNumber, service_lifts: nonNegativeNumber,
+  flooring: optionalString, flooring_type: optionalString, bhk: optionalString, bhk_type: optionalString,
+  no_of_balconies: optionalString, no_of_bathrooms: optionalString, no_of_lifts: optionalString, no_of_parkings: optionalString,
+  parking_details: optionalString, parking_type: optionalString, furnishing: optionalString, furnishing_type: optionalString,
+  cross_ventilation: z.nativeEnum(Constants.CrossVentilation).optional(),
+  natural_light: z.nativeEnum(Constants.NaturalLight).optional(),
+  vastu_compliant: z.nativeEnum(Constants.VastuCompliant).optional(),
+  pets_allowed: z.nativeEnum(Constants.PetsAllowed).optional(),
+  ceiling_height: optionalString, ceiling_height_side: optionalString,
+  boundary_wall_type: optionalString, boundary_wall_height: optionalString, boundary_wall_height_side: optionalString,
+  gate_type: optionalString, gate_height: optionalString, gate_height_side: optionalString,
+  servant_quarters: optionalString, lawn_area: optionalString,
 });
 
 // Commercial Details
 export const commercialDetailsSchema = z.object({
-  property_purpose: z.nativeEnum(PropertyPurpose).optional(),
-  availability_status: z.string().optional(),
-  available_from: z.coerce.date().optional().nullable(),
-  current_occupation_status: z.nativeEnum(CurrentOccupancy).optional(),
-  monthly_rent: nonNegativeNumber.optional(),
-  discount_price: nonNegativeNumber.optional(),
-  security_amount: nonNegativeNumber.optional(),
-  property_price: z.coerce.number().min(0).optional(),
-  sale_considration: nonNegativeNumber.optional(),
-  sale_consideration: nonNegativeNumber.optional(),
-  avg_rate_per_sqft: nonNegativeNumber.optional(),
-  brokerage_charge: nonNegativeNumber.optional(),
-  tenantsPreferred: z.string().optional(),
-  transfer_charges: nonNegativeNumber.optional(),
-  move_in_charges: nonNegativeNumber.optional(),
-  registration_charges: nonNegativeNumber.optional(),
-  stamp_duty: nonNegativeNumber.optional(),
-  maintain_charges: nonNegativeNumber.optional(),
-  maintenance_included: z.string().optional(),
-  notice_needed: z.string().optional(),
-  internal_notes: z.string().optional()
+  property_purpose: z.nativeEnum(Constants.PropertyPurpose).optional(),
+  availability_status: optionalString, available_from: optionalDate.nullable(),
+  current_occupation_status: z.nativeEnum(Constants.CurrentOccupancy).optional(),
+  monthly_rent: nonNegativeNumber, discount_price: nonNegativeNumber, security_amount: nonNegativeNumber,
+  property_price: nonNegativeNumber, sale_considration: nonNegativeNumber, sale_consideration: nonNegativeNumber,
+  avg_rate_per_sqft: nonNegativeNumber, brokerage_charge: nonNegativeNumber,
+  tenantsPreferred: optionalString, transfer_charges: nonNegativeNumber, move_in_charges: nonNegativeNumber,
+  registration_charges: nonNegativeNumber, stamp_duty: nonNegativeNumber, maintain_charges: nonNegativeNumber,
+  maintenance_included: optionalString, notice_needed: optionalString, internal_notes: optionalString,
 });
 
-// Property Details
-export const listingPropertyDetailsSchema = z.object({
-  unit_no: z.string().optional(),
-  project_name: z.string().optional(),
-  tower: z.string().optional()
-});
-
-// Address
+// Property Details & Address
+export const listingPropertyDetailsSchema = z.object({ unit_no: optionalString, project_name: optionalString, tower: optionalString });
 export const listingAddressSchema = z.object({
-  line_1: z.string().optional(),
-  region: z.string().optional(),
-  sub_region: z.string().optional(),
-  subregion: z.string().optional(),
-  locality: z.string().optional(),
-  city: z.string().optional(),
-  listing_city: z.string().optional(),
-  pincode: z.coerce.number().optional()
+  line_1: optionalString, region: optionalString, sub_region: optionalString, subregion: optionalString, locality: optionalString,
+  city: optionalString, listing_city: optionalString, pincode: optionalNumber,
 });
+export const brokerAndAgentSchema = z.object({ broker_id: optionalString, firm_id: optionalString });
 
-// Step 1 — Essential
-const essentialFields = {
-  listing_details: z.object({
-    share: z.boolean(),
-    property_status: z.nativeEnum(PropertyStatus),
-    tower: requiredString("Tower"),
-    unit_no: requiredString("Unit number"),
-    floor_no: requiredString("Floor number"),
-    UnitFloorPosition: z.nativeEnum(UnitFloorPosition),
-    total_floor: requiredString("Total floor"),
-    listing_name: requiredString("Listing name"),
-    project_type: z.nativeEnum(ProjectType)
-  }),
-  commercial_details: z.object({
-    availability_status: requiredString("Availability status"),
-    property_price: z.coerce.number().min(0, "Property price cannot be negative")
-  }),
-  property_details: z.object({
-    project_name: requiredString("Project name")
-  }),
-  listing_address: z.object({
-    line_1: requiredString("Address"),
-    region: requiredString("Region"),
-    subregion: requiredString("Subregion"),
-    locality: requiredString("Locality"),
-    listing_city: requiredString("Listing city")
-  })
+// Other Field Schemas
+export const keyFeaturesSchema = z.array(z.string().trim().min(1, "Key feature cannot be empty"));
+export const amenitiesSchema = z.array(z.any());
+export const furnishingAmenitiesSchema = z.array(z.any());
+export const apartmentAmenitiesSchema = z.array(z.string());
+export const videosSchema = z.array(videoItemSchema);
+export const seoSchema = z.record(z.string(), z.any());
+
+// Field Registry
+const listingFieldSchemas = {
+  listing_type: z.nativeEnum(Constants.ListingType),
+  onboarding_type: z.string(), isCustomUnit: z.boolean(), is_custom_unit: z.boolean(),
+  selected_unit_id: z.string(), selected_unit_no: z.string(), coverImageKey: z.string(),
+  firm_name: z.string(), broker_name: z.string(), vrTour: z.string(),
+  is_personalized: z.boolean(), live: z.boolean(),
+  seo: seoSchema, listing_details: listingDetailsSchema, commercial_details: commercialDetailsSchema,
+  property_details: listingPropertyDetailsSchema, listing_address: listingAddressSchema,
+  broker_and_agent: brokerAndAgentSchema, key_features: keyFeaturesSchema, amenities: amenitiesSchema,
+  furnishingAmenities: furnishingAmenitiesSchema, apartmentAmenities: apartmentAmenitiesSchema,
+  images: imagesSchema, videos: videosSchema,
+} as const;
+
+// Dot Notation Validation
+const serverControlledFields = new Set(["_id", "sub", "firm_id", "listing_id", "current_step", "status"]);
+
+export const validateListingData = (data: Record<string, any>) => {
+  for (const [key, value] of Object.entries(data)) {
+    if (serverControlledFields.has(key)) continue;
+
+    const parts = key.split(".");
+    const parent = parts.shift();
+    const childPath = parts.join(".");
+
+    if (!parent) throw new Error(`Invalid field: ${key}`);
+
+    const parentSchema = listingFieldSchemas[parent as keyof typeof listingFieldSchemas];
+    if (!parentSchema) throw new Error(`Invalid field: ${key}`);
+
+    let fieldSchema: z.ZodTypeAny = parentSchema;
+
+    if (childPath) {
+      if (!(parentSchema instanceof z.ZodObject)) {
+        throw new Error(`Invalid nested field: ${key}`);
+      }
+
+      const shape = parentSchema.shape as Record<string, z.ZodTypeAny>;
+      const childSchema = shape[childPath];
+
+      if (!childSchema) throw new Error(`Invalid field: ${key}`);
+
+      fieldSchema = childSchema;
+    }
+
+    const result = fieldSchema.safeParse(value);
+    if (!result.success) {
+      throw new Error(result.error.issues[0]?.message ?? `Invalid value for ${key}`);
+    }
+  }
+
+  return data;
 };
-
-// Step 2 — Details
-const detailsFields = {
-  listing_details: z.object({
-    bhk_type: requiredString("BHK type"),
-    area: z.coerce.number().positive("Area must be greater than 0"),
-    area_unit_type: z.nativeEnum(AreaUnitType),
-    no_of_bathrooms: requiredString("Number of bathrooms"),
-    furnishing: requiredString("Furnishing"),
-    exit_direction: z.nativeEnum(Direction)
-  })
-};
-
-// Step 3 — Key Features
-const keyFeaturesFields = {
-  key_features: z.array(z.string().trim().min(1, "Key feature cannot be empty")).min(5, "At least 5 key features are required"),
-  images: imagesSchema.optional(),
-  videos: z.array(videoItemSchema).optional(),
-  amenities: z.array(z.any()).optional()
-};
-
-// Step 4 — Images
-const imagesStepFields = {
-  images: imagesSchema
-};
-
-// Step 5 — Videos
-const videosStepFields = {
-  videos: z.array(videoItemSchema)
-};
-
-// Step 6 — Amenities
-const amenitiesStepFields = {
-  amenities: z.array(z.any())
-};
-
-// Create Schemas (Note: Step 1 _id is optional, Steps 2-6 require _id)
-const essentialCreateSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  current_step: z.literal(OnboardingStep.ESSENTIAL),
-  _id: objectIdSchema.optional(),
-  ...essentialFields
-});
-
-const detailsCreateSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  current_step: z.literal(OnboardingStep.DETAILS),
-  _id: objectIdSchema,
-  ...detailsFields
-});
-
-const keyFeaturesCreateSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  current_step: z.literal(OnboardingStep.KEY_FEATURES),
-  _id: objectIdSchema,
-  ...keyFeaturesFields
-});
-
-const imagesCreateSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  current_step: z.literal(OnboardingStep.IMAGES),
-  _id: objectIdSchema,
-  ...imagesStepFields
-});
-
-const videosCreateSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  current_step: z.literal(OnboardingStep.VIDEOS),
-  _id: objectIdSchema,
-  ...videosStepFields
-});
-
-const amenitiesCreateSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  current_step: z.literal(OnboardingStep.AMENITIES),
-  _id: objectIdSchema,
-  ...amenitiesStepFields
-});
-
-// Create Listing Schema
-export const createListingSchema = z.discriminatedUnion("current_step", [
-  essentialCreateSchema,
-  detailsCreateSchema,
-  keyFeaturesCreateSchema,
-  imagesCreateSchema,
-  videosCreateSchema,
-  amenitiesCreateSchema
-]);
-
-// Update Schemas (Requires _id for all steps once the listing exists)
-const essentialUpdateSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  current_step: z.literal(OnboardingStep.ESSENTIAL),
-  _id: objectIdSchema,
-  ...essentialFields
-});
-
-const detailsUpdateSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  current_step: z.literal(OnboardingStep.DETAILS),
-  _id: objectIdSchema,
-  ...detailsFields
-});
-
-const keyFeaturesUpdateSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  current_step: z.literal(OnboardingStep.KEY_FEATURES),
-  _id: objectIdSchema,
-  ...keyFeaturesFields
-});
-
-const imagesUpdateSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  current_step: z.literal(OnboardingStep.IMAGES),
-  _id: objectIdSchema,
-  ...imagesStepFields
-});
-
-const videosUpdateSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  current_step: z.literal(OnboardingStep.VIDEOS),
-  _id: objectIdSchema,
-  ...videosStepFields
-});
-
-const amenitiesUpdateSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  current_step: z.literal(OnboardingStep.AMENITIES),
-  _id: objectIdSchema,
-  ...amenitiesStepFields
-});
-
-// Update Listing Schema
-export const updateListingSchema = z.discriminatedUnion("current_step", [
-  essentialUpdateSchema,
-  detailsUpdateSchema,
-  keyFeaturesUpdateSchema,
-  imagesUpdateSchema,
-  videosUpdateSchema,
-  amenitiesUpdateSchema
-]);
-
-// Common Updates
-export const updateListingCommonSchema = z.object({
-  broker_and_agent: z.object({
-    broker_id: z.string().optional(),
-    firm_id: z.string().optional()
-  }).partial().optional(),
-  furnishingAmenities: z.array(z.any()).optional(),
-  apartmentAmenities: z.array(z.string()).optional(),
-  vrTour: z.string().optional(),
-  coverImageKey: z.string().optional(),
-  is_personalized: z.boolean().optional(),
-  seo: z.record(z.string(), z.any()).optional()
-});
 
 // Status Action
 export const listingActionSchema = z.object({
-  params: z.object({
-    id: objectIdSchema
-  }),
-  body: z.object({
-    action: z.nativeEnum(ListingStatus)
-  })
-});
-
-// Root Listing
-export const rootListingSchema = z.object({
-  listing_type: z.nativeEnum(ListingType),
-  listing_details: listingDetailsSchema,
-  commercial_details: commercialDetailsSchema,
-  property_details: listingPropertyDetailsSchema,
-  listing_address: listingAddressSchema,
-  broker_and_agent: z.object({
-    broker_id: z.string().optional(),
-    firm_id: z.string().optional()
-  }),
-  key_features: z.array(z.string()).min(5),
-  amenities: z.array(z.any()).default([]),
-  furnishingAmenities: z.array(z.any()).default([]),
-  apartmentAmenities: z.array(z.string()).default([]),
-  onboarding_type: z.string().default("normal"),
-  isCustomUnit: z.boolean().default(false),
-  is_custom_unit: z.boolean().default(false),
-  selected_unit_id: z.string().optional(),
-  selected_unit_no: z.string().optional(),
-  coverImageKey: z.string().default(""),
-  firm_name: z.string().optional(),
-  broker_name: z.string().optional(),
-  vrTour: z.string().default(""),
-  is_personalized: z.boolean().default(false),
-  seo: z.record(z.string(), z.any()).default({}),
-  live: z.boolean().default(true),
-  listing_id: listingIdSchema
+  params: z.object({ id: objectIdSchema }),
+  body: z.object({ action: z.nativeEnum(Constants.ListingStatus) }),
 });
 
 // Types
-export type CreateListingInput = z.infer<typeof createListingSchema>;
-export type UpdateListingInput = z.infer<typeof updateListingSchema>;
 export type ListingActionInput = z.infer<typeof listingActionSchema>;
+export type ListingUpdateInput = Record<string, any>;

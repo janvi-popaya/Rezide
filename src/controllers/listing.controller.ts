@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { createListingSchema, objectIdSchema, listingActionSchema} from "../validations/index.validation.js";
+import {validateListingData, listingActionSchema} from "../validations/index.validation.js";
+import {objectIdSchema} from "../validations/common.validation.js";
 import listingService from "../services/listing.service.js";
 
 const getAuth = (req: Request) => ({
@@ -12,7 +13,7 @@ export const listingOnboarding = asyncHandler(async(req:Request, res:Response) =
         res.status(401).json({success: false, message: "Unauthorized access"});
         return;
     }
-    const result = await listingService.saveListing(createListingSchema.parse(req.body),getAuth(req));
+    const result = await listingService.saveListing(validateListingData(req.body),getAuth(req));
     res.status(result.created ? 201 : 200).json({
         success: true,
         message: result.created
