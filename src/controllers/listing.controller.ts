@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import {validateListingData, listingActionSchema} from "../validations/index.validation.js";
+import {validateListingData, listingActionSchema, validateListingSubmission} from "../validations/index.validation.js";
 import {objectIdSchema} from "../validations/common.validation.js";
 import listingService from "../services/listing.service.js";
 
@@ -52,4 +52,12 @@ export const updateListingStatus = asyncHandler(async (req:Request, res:Response
         message: "Listing status updated successfully.",
         data: listing
     });
+});
+export const submitListing = asyncHandler(async(req:Request, res:Response)=>{
+    if(!req.user){
+        return res.status(401).json({success:false, message:"Unauthorized access"});
+    }
+    const id = objectIdSchema.parse(req.params.id);
+    const listing = await listingService.submitListing(id, getAuth(req));
+    res.status(200).json({success:true, message:"Listing Submitted successfully",data:listing});
 });

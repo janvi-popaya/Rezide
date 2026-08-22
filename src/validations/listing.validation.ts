@@ -48,7 +48,7 @@ export const listingDetailsSchema = z.object({
   boundary_wall_type: optionalString, boundary_wall_height: optionalString, boundary_wall_height_side: optionalString,
   gate_type: optionalString, gate_height: optionalString, gate_height_side: optionalString,
   servant_quarters: optionalString, lawn_area: optionalString,
-});
+}).strict();
 
 // Commercial Details
 export const commercialDetailsSchema = z.object({
@@ -61,15 +61,15 @@ export const commercialDetailsSchema = z.object({
   tenantsPreferred: optionalString, transfer_charges: nonNegativeNumber, move_in_charges: nonNegativeNumber,
   registration_charges: nonNegativeNumber, stamp_duty: nonNegativeNumber, maintain_charges: nonNegativeNumber,
   maintenance_included: optionalString, notice_needed: optionalString, internal_notes: optionalString,
-});
+}).strict();
 
 // Property Details & Address
-export const listingPropertyDetailsSchema = z.object({ unit_no: optionalString, project_name: optionalString, tower: optionalString });
+export const listingPropertyDetailsSchema = z.object({ unit_no: optionalString, project_name: optionalString, tower: optionalString }).strict();
 export const listingAddressSchema = z.object({
   line_1: optionalString, region: optionalString, sub_region: optionalString, subregion: optionalString, locality: optionalString,
   city: optionalString, listing_city: optionalString, pincode: optionalNumber,
-});
-export const brokerAndAgentSchema = z.object({ broker_id: optionalString, firm_id: optionalString });
+}).strict();
+export const brokerAndAgentSchema = z.object({ broker_id: optionalString, firm_id: optionalString }).strict();
 
 // Other Field Schemas
 export const keyFeaturesSchema = z.array(z.string().trim().min(1, "Key feature cannot be empty"));
@@ -81,6 +81,7 @@ export const seoSchema = z.record(z.string(), z.any());
 
 // Field Registry
 const listingFieldSchemas = {
+  _id:z.string().optional(),
   listing_type: z.nativeEnum(Constants.ListingType), 
   current_step: z.nativeEnum(Constants.OnboardingStep),
   onboarding_type: z.string(), isCustomUnit: z.boolean(), is_custom_unit: z.boolean(),
@@ -95,11 +96,13 @@ const listingFieldSchemas = {
 } as const;
 
 // Dot Notation Validation
-const serverControlledFields = new Set(["_id", "sub", "firm_id", "listing_id", "status"]);
+const serverControlledFields = new Set(["sub", "firm_id", "listing_id"]);
 
 export const validateListingData = (data: Record<string, any>) => {
   for (const [key, value] of Object.entries(data)) {
-    if (serverControlledFields.has(key)) continue;
+    if (serverControlledFields.has(key)) {
+      throw new ApiError(400, `Field cannot be provided: ${key}`);
+    };
 
     const parts = key.split(".");
     const parent = parts.shift();
