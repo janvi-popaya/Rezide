@@ -39,7 +39,7 @@ export const listingDetailsSchema = z.object({
   passenger_lifts: nonNegativeNumber, service_lifts: nonNegativeNumber,
   flooring: optionalString, flooring_type: optionalString, bhk: optionalString, bhk_type: optionalString,
   no_of_balconies: optionalString, no_of_bathrooms: optionalString, no_of_lifts: optionalString, no_of_parkings: optionalString,
-  parking_details: optionalString, parking_type: optionalString, furnishing: optionalString, furnishing_type: optionalString,
+  parking_details: optionalString, furnishing: optionalString, furnishing_type: optionalString,
   cross_ventilation: z.nativeEnum(Constants.CrossVentilation).optional(),
   natural_light: z.nativeEnum(Constants.NaturalLight).optional(),
   vastu_compliant: z.nativeEnum(Constants.VastuCompliant).optional(),
@@ -55,6 +55,7 @@ export const commercialDetailsSchema = z.object({
   property_purpose: z.nativeEnum(Constants.PropertyPurpose).optional(),
   availability_status: optionalString, available_from: optionalDate.nullable(),
   current_occupation_status: z.nativeEnum(Constants.CurrentOccupancy).optional(),
+  parking_type: optionalString,
   monthly_rent: nonNegativeNumber, discount_price: nonNegativeNumber, security_amount: nonNegativeNumber,
   property_price: nonNegativeNumber, sale_considration: nonNegativeNumber, sale_consideration: nonNegativeNumber,
   avg_rate_per_sqft: nonNegativeNumber, brokerage_charge: nonNegativeNumber,
@@ -97,16 +98,78 @@ const listingFieldSchemas = {
 
 // Dot Notation Validation
 const serverControlledFields = new Set(["sub", "firm_id", "listing_id"]);
+const nestedParents = new Set([
+  "listing_details",
+  "commercial_details",
+  "property_details",
+  "listing_address",
+  "broker_and_agent",
+]);
+const imageCategories = new Set([
+  "apartment",
+  "ext_view_day",
+  "ext_view_night",
+  "amenities",
+  "plans",
+]);
+
+const imageFields = new Set([
+  "url",
+  "label",
+  "orientation",
+]);
 
 export const validateListingData = (data: Record<string, any>) => {
   for (const [key, value] of Object.entries(data)) {
     if (serverControlledFields.has(key)) {
       throw new ApiError(400, `Field cannot be provided: ${key}`);
     };
+    if (nestedParents.has(key) && value !== null && typeof value === "object" && !Array.isArray(value)) {
+      throw new ApiError(400, `Nested object '${key}' is not allowed. Use dot notation.`);
+    }
 
     const parts = key.split(".");
     const parent = parts.shift();
-    const childPath = parts.join(".");
+
+    // if data is image
+    if (parent === "images") {
+      if (parts.length !== 3) {
+        throw new ApiError(400, `Invalid image field: ${key}`);
+      }
+      const [category, imageId, field] = parts as [string, string, string];
+      if (!imageCategories.has(category)) {
+        throw new ApiError(400, `Invalid image category: ${category}`);
+      }
+      const imageIdResult = objectIdSchema.safeParse(imageId);
+      if (!imageIdResult.success) {
+        throw new ApiError(400, `Invalid image id: ${imageId}`);
+      }
+      if (!imageFields.has(field)) {
+        throw new ApiError(400,`Invalid image field: ${field}`);
+      }
+
+      let fieldSchema: z.ZodTypeAny;
+      switch (field) {
+        case "url":
+          fieldSchema = z.string().url("Invalid image URL");
+          break;
+        case "label":
+          fieldSchema = z.string().trim();
+          break;
+        case "orientation":
+          fieldSchema = z.string().trim();
+          break;
+        default:
+          throw new ApiError(400,`Invalid image field: ${field}`);
+      }
+      const result = fieldSchema.safeParse(value);
+      if (!result.success) {
+        throw new ApiError(400, result.error.issues[0]?.message ??`Invalid value for ${key}`);
+      }
+      continue;
+    }
+
+    const childPath = parts.slice(1).join(".");
 
     if (!parent) throw new ApiError(400, `Invalid field: ${key}`);
 

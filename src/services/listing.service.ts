@@ -34,6 +34,32 @@ class ListingService {
     }
     async saveListing(data: Record<string, any>, auth: AuthContext) {
         const {_id, images, videos, listing_id, status, ...listingData } = data;
+        const listingData: Record<string, any> = {};
+        const imageUpdates: Array<{
+            category: string;
+            imageId: string;
+            field: string;
+            value: any;
+        }> = [];
+
+        for (const [key, value] of Object.entries(rawData)) {
+            if (key.startsWith("images.")) {
+            const parts = key.split(".");
+
+            const [, category, imageId, field] = parts;
+
+            imageUpdates.push({
+                category,
+                imageId,
+                field,
+                value
+            });
+
+            continue;
+            }
+
+            listingData[key] = value;
+        }
         if (_id) {
             const listing = await Listings.findOneAndUpdate(
                 {
@@ -51,27 +77,38 @@ class ListingService {
                 throw new ApiError(404, "Listing not found");
             }
             // Update media only when media data is provided
-            if (images !== undefined || videos !== undefined) {
-                const mediaUpdate:Record<string, any> = {};
-                if(images!==undefined){
-                    // mediaUpdate.images = images;
-                    for (const [category, items] of Object.entries(images)) {
-                        mediaUpdate[`images.${category}`] = items;
-                    }
-                }
-                if(videos!==undefined){
-                    mediaUpdate.videos = videos;
-                }
-                await Media.findOneAndUpdate(
+            // if (images !== undefined || videos !== undefined) {
+            //     const mediaUpdate:Record<string, any> = {};
+            //     if(images!==undefined){
+            //         // mediaUpdate.images = images;
+            //         for (const [category, items] of Object.entries(images)) {
+            //             mediaUpdate[`images.${category}`] = items;
+            //         }
+            //     }
+            //     if(videos!==undefined){
+            //         mediaUpdate.videos = videos;
+            //     }
+            //     await Media.findOneAndUpdate(
+            //         { listing_id: listing._id },
+            //         { $set: mediaUpdate },
+            //         {
+            //             upsert: true,
+            //             new: true,
+            //             runValidators:true
+            //         }
+            //     );
+            // }
+            for (const update of imageUpdates) {
+                await Media.updateOne(
                     { listing_id: listing._id },
-                    { $set: mediaUpdate },
+                    {$set: {[`images.${update.category}.$[image].${update.field}`]: update.value}
+                    },
                     {
-                        upsert: true,
-                        new: true,
-                        runValidators:true
+                    arrayFilters: [{"image._id": update.imageId}],
+                    runValidators: true
                     }
                 );
-            }
+                }
             return {
                 created: false,
                 listing
