@@ -133,12 +133,12 @@ const CommercialDetailsSchema = new Schema(
     start_time: String,
     end_time: String,
 
-    monthly_rent: { type: Number, default: 0 },
+    // monthly_rent: { type: Number, default: 0 },
     discount_price: { type: Number, default: 0 },
     security_amount: { type: Number, default: 0 },
     property_price: Number,
-    sale_considration: Number,
-    sale_consideration: Number,
+    // sale_considration: Number,
+    // sale_consideration: Number,
     avg_rate_per_sqft: Number,
 
     brokerage_charge: { type: Number, default: 0 },

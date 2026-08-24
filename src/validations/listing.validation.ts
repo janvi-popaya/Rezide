@@ -2,6 +2,7 @@ import { z } from "zod";
 import * as Constants from "../constants/index.constant.js";
 import { objectIdSchema, listingIdSchema, requiredString } from "./common.validation.js";
 import { imagesSchema, videoItemSchema } from "./media.validation.js";
+import { ApiError } from "../utils/apiError.js";
 
 // Helpers & Base Schemas
 const optionalString = z.string().trim().optional();
@@ -47,7 +48,7 @@ export const listingDetailsSchema = z.object({
   boundary_wall_type: optionalString, boundary_wall_height: optionalString, boundary_wall_height_side: optionalString,
   gate_type: optionalString, gate_height: optionalString, gate_height_side: optionalString,
   servant_quarters: optionalString, lawn_area: optionalString,
-});
+}).strict();
 
 // Commercial Details
 export const commercialDetailsSchema = z.object({
@@ -60,15 +61,15 @@ export const commercialDetailsSchema = z.object({
   tenantsPreferred: optionalString, transfer_charges: nonNegativeNumber, move_in_charges: nonNegativeNumber,
   registration_charges: nonNegativeNumber, stamp_duty: nonNegativeNumber, maintain_charges: nonNegativeNumber,
   maintenance_included: optionalString, notice_needed: optionalString, internal_notes: optionalString,
-});
+}).strict();
 
 // Property Details & Address
-export const listingPropertyDetailsSchema = z.object({ unit_no: optionalString, project_name: optionalString, tower: optionalString });
+export const listingPropertyDetailsSchema = z.object({ unit_no: optionalString, project_name: optionalString, tower: optionalString }).strict();
 export const listingAddressSchema = z.object({
   line_1: optionalString, region: optionalString, sub_region: optionalString, subregion: optionalString, locality: optionalString,
   city: optionalString, listing_city: optionalString, pincode: optionalNumber,
-});
-export const brokerAndAgentSchema = z.object({ broker_id: optionalString, firm_id: optionalString });
+}).strict();
+export const brokerAndAgentSchema = z.object({ broker_id: optionalString, firm_id: optionalString }).strict();
 
 // Other Field Schemas
 export const keyFeaturesSchema = z.array(z.string().trim().min(1, "Key feature cannot be empty"));
@@ -80,7 +81,9 @@ export const seoSchema = z.record(z.string(), z.any());
 
 // Field Registry
 const listingFieldSchemas = {
-  listing_type: z.nativeEnum(Constants.ListingType),
+  _id:z.string().optional(),
+  listing_type: z.nativeEnum(Constants.ListingType), 
+  current_step: z.nativeEnum(Constants.OnboardingStep),
   onboarding_type: z.string(), isCustomUnit: z.boolean(), is_custom_unit: z.boolean(),
   selected_unit_id: z.string(), selected_unit_no: z.string(), coverImageKey: z.string(),
   firm_name: z.string(), broker_name: z.string(), vrTour: z.string(),
@@ -93,34 +96,36 @@ const listingFieldSchemas = {
 } as const;
 
 // Dot Notation Validation
-const serverControlledFields = new Set(["_id", "sub", "firm_id", "listing_id", "status"]);
+const serverControlledFields = new Set(["sub", "firm_id", "listing_id"]);
 
 export const validateListingData = (data: Record<string, any>) => {
   for (const [key, value] of Object.entries(data)) {
-    if (serverControlledFields.has(key)) continue;
+    if (serverControlledFields.has(key)) {
+      throw new ApiError(400, `Field cannot be provided: ${key}`);
+    };
 
     const parts = key.split(".");
     const parent = parts.shift();
     const childPath = parts.join(".");
 
-    if (!parent) throw new Error(`Invalid field: ${key}`);
+    if (!parent) throw new ApiError(400, `Invalid field: ${key}`);
 
     const parentSchema = listingFieldSchemas[parent as keyof typeof listingFieldSchemas];
-    if (!parentSchema) throw new Error(`Invalid field: ${key}`);
+    if (!parentSchema) throw new ApiError(400, `Invalid field: ${key}`);
     let fieldSchema: z.ZodTypeAny = parentSchema;
 
     if (childPath) {
       if (!(parentSchema instanceof z.ZodObject)) {
-        throw new Error(`Invalid nested field: ${key}`);
+        throw new ApiError(400, `Invalid nested field: ${key}`);
       }
       const shape = parentSchema.shape as Record<string, z.ZodTypeAny>;
       const childSchema = shape[childPath];
-      if (!childSchema) throw new Error(`Invalid field: ${key}`);
+      if (!childSchema) throw new ApiError(400, `Invalid field: ${key}`);
       fieldSchema = childSchema;
     }
     const result = fieldSchema.safeParse(value);
     if (!result.success) {
-      throw new Error(result.error.issues[0]?.message ?? `Invalid value for ${key}`);
+      throw new ApiError(400, result.error.issues[0]?.message ?? `Invalid value for ${key}`);
     }
   }
   return data;
