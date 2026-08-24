@@ -4,7 +4,8 @@ import {
   ProjectType, PlotAreaUnitType, PropertyStatus, PossessionTimeline,
   PropertyPurpose, Direction, AreaUnitType, PetsAllowed, VisitDay, Day,
   BrokerageTerms, NoticeNeededDuration, CurrentOccupancy, AreaType,
-  VastuCompliant, CrossVentilation, NaturalLight, OnboardingStep
+  VastuCompliant, CrossVentilation, NaturalLight, OnboardingStep,
+  OfficeUnitType
 } from "../constants/index.constant.js";
 
 // Helper for Schema options
@@ -52,7 +53,7 @@ const ListingDetailsSchema = new Schema(
     view: String,
 
     project_type: { type: String, enum: Object.values(ProjectType) },
-    unit_type: { type: String, enum: Object.values(HomeUnitType) },
+    unit_type: { type: String, enum: Object.values(OfficeUnitType) },
     property_sub_type: String,
 
     area_unit_type: { type: String, enum: Object.values(AreaUnitType) },
@@ -96,8 +97,25 @@ const ListingDetailsSchema = new Schema(
     gate_height_side: String,
     // Villa / independent house type fields
     servant_quarters: String,
-    lawn_area: String
-  },
+    lawn_area: String,
+
+    //new fields
+   no_of_seats: String,
+    no_of_cabins: String,
+    no_of_private_washroom: String,
+    no_of_common_washroom: String,
+    no_of_conference_rooms: String,
+    no_of_meeting_rooms: String,
+    no_of_private_parkings: String,
+
+    pantry: { type: Boolean, default: false },
+    reception_area: { type: Boolean, default: false },
+    lobby: { type: Boolean, default: false },
+    refuge: { type: Boolean, default: false },
+    food_court_cafeteria: { type: Boolean, default: false },
+    building_age_range: String,
+  
+  },  
   noIdOption
 );
 
@@ -156,7 +174,22 @@ const CommercialDetailsSchema = new Schema(
 
     // servant_quarters: { type: String, default: "" },
     // lawn_area: { type: String, default: "" },
-    internal_notes: { type: String, default: "" }
+    internal_notes: { type: String, default: "" },
+
+    building_plan_approval: {
+      type: Boolean,
+      default: false,
+    },
+
+    fire_noc: {
+      type: Boolean,
+      default: false,
+    },
+
+    cam_charges: {
+      type: Number,
+      default: 0,
+    },
   },
   noIdOption
 );
@@ -265,3 +298,5 @@ listingOnboardingSchema.index({ sub: 1, firm_id: 1 });
 listingOnboardingSchema.index({ sub: 1, current_step: 1 });
 
 export default model("Listings", listingOnboardingSchema);
+
+
