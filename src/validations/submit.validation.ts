@@ -203,6 +203,7 @@ const validateUnitTypeFields = (listing: Record<string, any>, errors: string[]) 
             case Constants.LandUnitType.RESIDENTIAL_PLOT:
             case Constants.LandUnitType.COMMERCIAL_LAND: {
                 // Add land-specific mandatory fields here.
+                //same update 
                 break;
             }
             default: {
