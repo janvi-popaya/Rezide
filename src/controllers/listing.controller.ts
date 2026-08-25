@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import {validateListingData, listingActionSchema, validateListingSubmission} from "../validations/index.validation.js";
-import {objectIdSchema} from "../validations/common.validation.js";
+import {validateListingData, listingActionSchema} from "../validations/index.validation.js";
+import {objectIdSchema} from "../validations/index.validation.js";
 import listingService from "../services/listing.service.js";
 
 const getAuth = (req: Request) => ({
@@ -23,14 +23,16 @@ export const listingOnboarding = asyncHandler(async(req:Request, res:Response) =
     });
 });
 export const getListingById = asyncHandler(async (req:Request, res:Response) => {
+    console.log("Step-1");
     if (!req.user) {
         res.status(401).json({success: false, message: "Unauthorized access"});
         return;
     }
+    console.log("Step-2");
     const id = objectIdSchema.parse(req.params.id);
-    console.log("step-1");
+    console.log("step-3");
     const listing = await listingService.getListingById(id, getAuth(req));
-    console.log("step-2");
+    console.log("step-4");
     res.status(200).json({
         success: true,
         data: listing
@@ -52,12 +54,4 @@ export const updateListingStatus = asyncHandler(async (req:Request, res:Response
         message: "Listing status updated successfully.",
         data: listing
     });
-});
-export const submitListing = asyncHandler(async(req:Request, res:Response)=>{
-    if(!req.user){
-        return res.status(401).json({success:false, message:"Unauthorized access"});
-    }
-    const id = objectIdSchema.parse(req.params.id);
-    const listing = await listingService.submitListing(id, getAuth(req));
-    res.status(200).json({success:true, message:"Listing Submitted successfully",data:listing});
 });

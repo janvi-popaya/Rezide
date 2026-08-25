@@ -1,0 +1,158 @@
+{
+  _id: ObjectId('6a0c85edfad7ff47339f9004'),
+  mediaId: 'med_01ks0ep9wbp4qcf6dycafqkp0g',
+  imageId: '1626c420911e7288742e0264396563d4',
+  mediaType: 'image',
+  usageContext: 'project_image',
+  status: 'ready_clean',
+  approvalVariantStatus: 'pending',
+  version: NumberInt('1'),
+
+  owner: {
+    userId: '656a267e8bc1912f0675b5d2',
+    firmId: 'string'
+  },
+
+  source: {
+    storage: 's3',
+    bucket: 'rezide',
+    key: 'media/1626c420911e7288742e0264396563d4/v1/original/source.jpg',
+    region: 'ap-south-1',
+    mimeType: 'image/jpeg',
+    sizeBytes: NumberInt('1782375'),
+    originalFileName: '3965688cb6b14c3880bd32297f339011firmmark.jpeg',
+    fileExtension: 'jpg',
+    checksumSha256: null
+  },
+
+  watermarkPolicy: {
+    upload: {
+      rezide: {
+        mode: 'none',
+        appliedTo: []
+      },
+      firmmark: {
+        mode: 'disabled',
+        firmId: null,
+        appliedTo: []
+      }
+    },
+
+    approval: {
+      rezide: {
+        mode: 'none',
+        appliedTo: []
+      },
+      firmmark: {
+        mode: 'disabled',
+        firmId: null,
+        appliedAt: 'approval',
+        appliedTo: []
+      }
+    }
+  },
+
+  variants: {
+    clean: {
+      thumb: {
+        formats: {
+          webp: {
+            key: 'media/1626c420911e7288742e0264396563d4/v1/clean/thumb/240.webp',
+            url: 'https://cdn.rezide.com/media/1626c420911e7288742e0264396563d4/v1/clean/thumb/240.webp',
+            width: NumberInt('240'),
+            format: 'webp',
+            mimeType: 'image/webp',
+            sizeBytes: NumberInt('6550'),
+            watermarkApplied: []
+          }
+        }
+      },
+
+      preview: {
+        formats: {
+          webp: {
+            key: 'media/1626c420911e7288742e0264396563d4/v1/clean/preview/640.webp',
+            url: 'https://cdn.rezide.com/media/1626c420911e7288742e0264396563d4/v1/clean/preview/640.webp',
+            width: NumberInt('640'),
+            format: 'webp',
+            mimeType: 'image/webp',
+            sizeBytes: NumberInt('41576'),
+            watermarkApplied: []
+          }
+        }
+      },
+
+      main: {
+        formats: {
+          webp: {
+            key: 'media/1626c420911e7288742e0264396563d4/v1/clean/main/1200.webp',
+            url: 'https://cdn.rezide.com/media/1626c420911e7288742e0264396563d4/v1/clean/main/1200.webp',
+            width: NumberInt('1200'),
+            format: 'webp',
+            mimeType: 'image/webp',
+            sizeBytes: NumberInt('165550'),
+            watermarkApplied: []
+          },
+
+          jpg: {
+            key: 'media/1626c420911e7288742e0264396563d4/v1/clean/main/1200.jpg',
+            url: 'https://cdn.rezide.com/media/1626c420911e7288742e0264396563d4/v1/clean/main/1200.jpg',
+            width: NumberInt('1200'),
+            format: 'jpg',
+            mimeType: 'image/jpeg',
+            sizeBytes: NumberInt('199784'),
+            watermarkApplied: []
+          }
+        }
+      },
+
+      whatsapp: {
+        formats: {
+          jpg: {
+            key: 'media/1626c420911e7288742e0264396563d4/v1/clean/whatsapp/1024.jpg',
+            url: 'https://cdn.rezide.com/media/1626c420911e7288742e0264396563d4/v1/clean/whatsapp/1024.jpg',
+            width: NumberInt('1024'),
+            format: 'jpg',
+            mimeType: 'image/jpeg',
+            sizeBytes: NumberInt('138266'),
+            watermarkApplied: []
+          }
+        }
+      }
+    },
+
+    public: {},
+
+    firmmark: {}
+  },
+
+  meta: {
+    width: NumberInt('4032'),
+    height: NumberInt('3024'),
+    aspectRatio: Double('1.3333'),
+    orientation: 'landscape',
+    hasAlpha: false,
+    sourceMimeType: 'image/jpeg',
+    processedAt: ISODate('2026-05-19T15:46:55.245Z'),
+    blurHash: 'LDG]2J~p9#t-#%_3S5IU-:H=DhWA',
+    dominantColor: '#888c8a'
+  },
+
+  usage: {
+    entityType: 'string',
+    entityId: 'string',
+    label: 'string'
+  },
+
+  audit: {
+    uploadedBy: '656a267e8bc1912f0675b5d2',
+    uploadIp: '127.0.0.1',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36',
+    uploadedAt: ISODate('2026-05-19T15:46:53.880Z')
+  },
+
+  error: null,
+
+  createdAt: ISODate('2026-05-19T15:46:53.880Z'),
+  updatedAt: ISODate('2026-05-19T15:46:56.950Z')
+}
