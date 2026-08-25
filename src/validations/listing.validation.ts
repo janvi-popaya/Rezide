@@ -1,9 +1,9 @@
 import { z } from "zod";
 import * as Constants from "../constants/index.constant.js";
-import { objectIdSchema } from "./common.validation.js";
 import { ApiError } from "../utils/apiError.js";
 
 // Reusable Validators
+export const objectIdSchema = z.string().trim().regex(/^[a-f\d]{24}$/i, "Invalid ObjectId");
 const optionalString = z.string().trim().optional();
 const optionalNullableString = z.string().trim().optional().nullable();
 const optionalNumber = z.coerce.number().optional();
@@ -13,6 +13,8 @@ const optionalDate = z.coerce.date().optional();
 
 // Flat Listing Field Validation
 const listingFieldSchemas: Record<string, z.ZodTypeAny> = {
+  _id:objectIdSchema.optional(),
+
   // Listing
   "listing_type": z.nativeEnum(Constants.ListingType),
   "current_step": z.nativeEnum(Constants.OnboardingStep),
@@ -21,7 +23,6 @@ const listingFieldSchemas: Record<string, z.ZodTypeAny> = {
   "lastUpdate": z.coerce.date(),
   "firm_name": optionalString,
   "broker_name": optionalString,
-  "video": optionalString,
   "is_personalized": optionalBoolean,
 
   // Listing Details
@@ -129,6 +130,9 @@ export const validateListingData = (data: Record<string, any>) => {
     if (key === "sub" || key === "firm_id" || key === "listing_id") {
       throw new ApiError(400, `Field cannot be provided: ${key}`);
     }
+    if (value !== null && typeof value === "object" && !Array.isArray(value)) {
+      throw new ApiError(400, `Provide '${key}' data in dot notation form`);
+    }
     // Normal listing field
     const schema = listingFieldSchemas[key];
     if (!schema) {
@@ -143,7 +147,6 @@ export const validateListingData = (data: Record<string, any>) => {
       );
     }
   }
-
   return data;
 };
 // Status Action
