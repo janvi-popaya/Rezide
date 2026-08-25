@@ -69,6 +69,27 @@ const ListingDetailsSchema = new Schema(
     no_of_common_washroom: String,
     no_of_private_parkings: String,
 
+    no_of_conference_rooms: String,
+    lobby: { type: String, enum: Object.values(YesAndNo) },
+    refuge: { type: String, enum: Object.values(YesAndNo) },
+    food_court_cafeteria: { type: String, enum: Object.values(YesAndNo) },
+
+    //-------------other additional fields --------------
+    building_status: String,
+    building_age: Number,
+    structure: String,
+
+    boundary_wall_type: String,
+    boundary_wall_height: String,
+    boundary_wall_height_side: String,
+
+    gate_type: String,
+    gate_height: String,
+    gate_height_side: String,
+
+    servant_quarters: { type: String, enum: Object.values(YesAndNo) },
+    lawn_area: String,
+
   },
   noIdOption
 );
@@ -107,6 +128,8 @@ const CommercialDetailsSchema = new Schema(
     cam_charges: {type:Number, default: 0},
     building_plan_approval: {type:String, enum: Object.values(YesAndNo)},
     fire_noc: {type:String, enum: Object.values(YesAndNo)},
+    move_in_charges: {type: Number, default: 0},
+    sale_consideration: Number,
   },
   noIdOption
 );

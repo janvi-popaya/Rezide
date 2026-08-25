@@ -73,6 +73,32 @@ const listingFieldSchemas: Record<string, z.ZodTypeAny> = {
   "listing_details.vastu_compliant": z.nativeEnum(Constants.VastuCompliant).optional(),
   "listing_details.pets_allowed": z.nativeEnum(Constants.PetsAllowed).optional(),
 
+  // Listing Details - Office Page & Additional Fields
+  "listing_details.no_of_seats": optionalString,
+  "listing_details.no_of_cabins": optionalString,
+  "listing_details.no_of_meeting_rooms": optionalString,
+  "listing_details.reception_area": z.nativeEnum(Constants.YesAndNo).optional(),
+  "listing_details.pantry": z.nativeEnum(Constants.YesAndNo).optional(),
+  "listing_details.no_of_private_washroom": optionalString,
+  "listing_details.no_of_common_washroom": optionalString,
+  "listing_details.no_of_private_parkings": optionalString,
+  "listing_details.no_of_conference_rooms": optionalString,
+  "listing_details.lobby": z.nativeEnum(Constants.YesAndNo).optional(),
+  "listing_details.refuge": z.nativeEnum(Constants.YesAndNo).optional(),
+  "listing_details.food_court_cafeteria": z.nativeEnum(Constants.YesAndNo).optional(),
+
+  "listing_details.building_status": optionalString,
+  "listing_details.building_age": nonNegativeNumber,
+  "listing_details.structure": optionalString,
+  "listing_details.boundary_wall_type": optionalString,
+  "listing_details.boundary_wall_height": optionalString,
+  "listing_details.boundary_wall_height_side": optionalString,
+  "listing_details.gate_type": optionalString,
+  "listing_details.gate_height": optionalString,
+  "listing_details.gate_height_side": optionalString,
+  "listing_details.servant_quarters": z.nativeEnum(Constants.YesAndNo).optional(),
+  "listing_details.lawn_area": optionalString,
+
   // Commercial Details
   "commercial_details.parking_type": optionalString,
   "commercial_details.property_purpose": z.nativeEnum(Constants.PropertyPurpose).optional(),
@@ -98,6 +124,15 @@ const listingFieldSchemas: Record<string, z.ZodTypeAny> = {
   "commercial_details.maintenance_included": optionalString,
   "commercial_details.notice_needed": z.nativeEnum(Constants.NoticeNeededDuration).optional(),
   "commercial_details.internal_notes": optionalString,
+
+  // Commercial Details - Office Page Fields
+  "commercial_details.monthly_rent": nonNegativeNumber,
+  "commercial_details.cam_charges": nonNegativeNumber,
+  "commercial_details.building_plan_approval": z.nativeEnum(Constants.YesAndNo).optional(),
+  "commercial_details.fire_noc": z.nativeEnum(Constants.YesAndNo).optional(),
+  "commercial_details.move_in_charges": nonNegativeNumber,
+  "commercial_details.sale_consideration": nonNegativeNumber,
+
 
   // Broker & Agent
   "broker_and_agent.sub": z.string().trim().min(1),
