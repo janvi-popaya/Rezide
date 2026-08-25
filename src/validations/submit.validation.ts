@@ -15,6 +15,8 @@ const validateCommonSubmissionFields = (listing: Record<string, any>, errors: st
         errors.push("listing_details.region");
     }
 
+    console.log("commit testing")
+
     if (!details?.sub_region) {
         errors.push("listing_details.sub_region");
     }
