@@ -2,7 +2,7 @@ import * as Constants from "../constants/index.constant.js";
 
 const validateCommonSubmissionFields = (listing: Record<string, any>, errors: string[]) => {
     const details = listing.listing_details;
-    
+    console.log("Updated the code ");
     if (!listing.listing_type) {
         errors.push("listing_type");
     }
