@@ -8,8 +8,11 @@ router.use(Protect);
 router.route("/").post(listingOnboarding);
 router.route("/:id")
     .get(getListingById)
-router.route("/:id/status")
     .patch(updateListingStatus);
+
+    
+// router.route("/:id/status")
+    // .patch(updateListingStatus);
 // router.route("/:id/submit")
 //     .post(submitListing);
 

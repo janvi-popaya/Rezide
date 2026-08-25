@@ -15,8 +15,6 @@ const validateCommonSubmissionFields = (listing: Record<string, any>, errors: st
         errors.push("listing_details.region");
     }
 
-    console.log("commit testing")
-
     if (!details?.sub_region) {
         errors.push("listing_details.sub_region");
     }
@@ -99,31 +97,25 @@ const validateUnitTypeFields = (listing: Record<string, any>, errors: string[]) 
         return;
     }
     switch (details?.unit_type) {
-        case Constants.HomeUnitType.APARTMENT: {
-            if (!details?.project) {
-                errors.push("listing_details.project");
-            }
-            if (!details?.tower) {
-                errors.push("listing_details.tower");
-            }
-            if (!details?.unit_no) {
-                errors.push("listing_details.unit_no");
-            }
-            if (!details?.floor_no) {
-                errors.push("listing_details.floor_no");
-            }
-            if (!details?.bhk) {
-                errors.push("listing_details.bhk");
-            }
+        case Constants.HomeUnitType.APARTMENT:
+        case Constants.HomeUnitType.DUPLEX:
+        case Constants.HomeUnitType.PENTHOUSE:
+        case Constants.HomeUnitType.JODI:
+        case Constants.HomeUnitType.STUDIO:
+        case Constants.HomeUnitType.INDEPENDENT_FLOOR: {
+            if (!details?.project) errors.push("listing_details.project");
+            if (!details?.tower) errors.push("listing_details.tower");
+            if (!details?.unit_no) errors.push("listing_details.unit_no");
+            if (!details?.floor_no) errors.push("listing_details.floor_no");
+            if (!details?.bhk) errors.push("listing_details.bhk");
             break;
         }
-        case Constants.HomeUnitType.VILLA: {
-            if (!details?.bhk) {
-                errors.push("listing_details.bhk");
-            }
-            if (!details?.lawn_area) {
-                errors.push("listing_details.lawn_area");
-            }
+        case Constants.HomeUnitType.VILLA:
+        case Constants.HomeUnitType.INDEPENDENT_HOUSE:
+        case Constants.HomeUnitType.HOLIDAY_HOME:
+        case Constants.HomeUnitType.ROW_TOWN_HOUSE: {
+            if (!details?.bhk) errors.push("listing_details.bhk");
+            if (!details?.lawn_area) errors.push("listing_details.lawn_area");
             break;
         }
         default:

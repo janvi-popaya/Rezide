@@ -58,3 +58,9 @@ export enum OnboardingStep {
     VIDEOS = "videos",
     AMENITIES = "amenities"
 }
+
+//-----common usages enums--------
+export enum YesAndNo{
+    YES = "yes",
+    NO = "no",
+}
