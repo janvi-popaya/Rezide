@@ -1,18 +1,9 @@
   import { Schema, model } from "mongoose";
 import {
-<<<<<<< HEAD
-  ListingType, ListingStatus, HomeUnitType, UnitFloorPosition,
-  ProjectType, PlotAreaUnitType, PropertyStatus, PossessionTimeline,
-  PropertyPurpose, Direction, AreaUnitType, PetsAllowed, VisitDay, Day,
-  BrokerageTerms, NoticeNeededDuration, CurrentOccupancy, AreaType,
-  VastuCompliant, CrossVentilation, NaturalLight, OnboardingStep,
-  OfficeUnitType
-=======
   ListingType, ListingStatus, HomeUnitType, UnitFloorPosition, ProjectType,
   PlotAreaUnitType, PropertyStatus, PossessionTimeline, PropertyPurpose, Direction,
   AreaUnitType, PetsAllowed, VisitDay, Day, BrokerageTerms, NoticeNeededDuration,
   CurrentOccupancy, AreaType, VastuCompliant, CrossVentilation, NaturalLight, OnboardingStep
->>>>>>> 04d1ba64142f9e72cd5cad18876c02b61231e3c7
 } from "../constants/index.constant.js";
 
 const noIdOption = { _id: false };
@@ -41,13 +32,7 @@ const ListingDetailsSchema = new Schema(
     exit_direction: { type: String, enum: Object.values(Direction) },
     view: String,
     project_type: { type: String, enum: Object.values(ProjectType) },
-<<<<<<< HEAD
-    unit_type: { type: String, enum: Object.values(OfficeUnitType) },
-    property_sub_type: String,
-
-=======
     unit_type: { type: String, enum: Object.values(HomeUnitType) },
->>>>>>> 04d1ba64142f9e72cd5cad18876c02b61231e3c7
     area_unit_type: { type: String, enum: Object.values(AreaUnitType) },
     plot_area_unit_type: { type: String, enum: Object.values(PlotAreaUnitType) },
     plot_area: String,
@@ -70,40 +55,9 @@ const ListingDetailsSchema = new Schema(
     furnishing_type: String,
     ceiling_height: String,
     ceiling_height_side: String,
-<<<<<<< HEAD
-    boundary_wall_type: String,
-    boundary_wall_height: String,
-    boundary_wall_height_side: String,
-    // Gate
-    gate_type: String,
-    gate_height: String,
-    gate_height_side: String,
-    // Villa / independent house type fields
-    servant_quarters: String,
-    lawn_area: String,
-
-    //new fields
-   no_of_seats: String,
-    no_of_cabins: String,
-    no_of_private_washroom: String,
-    no_of_common_washroom: String,
-    no_of_conference_rooms: String,
-    no_of_meeting_rooms: String,
-    no_of_private_parkings: String,
-
-    pantry: { type: Boolean, default: false },
-    reception_area: { type: Boolean, default: false },
-    lobby: { type: Boolean, default: false },
-    refuge: { type: Boolean, default: false },
-    food_court_cafeteria: { type: Boolean, default: false },
-    building_age_range: String,
-  
-  },  
-=======
     vastu_compliant: { type: String, enum: Object.values(VastuCompliant) },
     pets_allowed: { type: String, enum: Object.values(PetsAllowed) }
   },
->>>>>>> 04d1ba64142f9e72cd5cad18876c02b61231e3c7
   noIdOption
 );
 
@@ -131,43 +85,8 @@ const CommercialDetailsSchema = new Schema(
     brokerage_terms: { type: String, enum: Object.values(BrokerageTerms) },
     maintenance_charges: { type: Number, default: 0 },
     maintenance_included: { type: String, default: "" },
-<<<<<<< HEAD
-
-    notice_needed: { type: String, enum: Object.values(NoticeNeededDuration), required:false },
-    // vastu_compliant: { type: String, enum: Object.values(VastuCompliant), default: "" },
-    // cross_ventilation: { type: String, enum: Object.values(CrossVentilation), default: "" },
-    // natural_light: { type: String, enum: Object.values(NaturalLight), default: "" },
-
-    // boundary_wall_type: { type: String, default: "" },
-    // boundary_wall_height: { type: String, default: "" },
-    // boundary_wall_height_side: { type: String, default: "" },
-
-    // gate_type: { type: String, default: "" },
-    // gate_height: { type: String, default: "" },
-    // gate_height_side: { type: String, default: "" },
-
-    // servant_quarters: { type: String, default: "" },
-    // lawn_area: { type: String, default: "" },
-    internal_notes: { type: String, default: "" },
-
-    building_plan_approval: {
-      type: Boolean,
-      default: false,
-    },
-
-    fire_noc: {
-      type: Boolean,
-      default: false,
-    },
-
-    cam_charges: {
-      type: Number,
-      default: 0,
-    },
-=======
     notice_needed: { type: String, enum: Object.values(NoticeNeededDuration) },
     internal_notes: { type: String, default: "" }
->>>>>>> 04d1ba64142f9e72cd5cad18876c02b61231e3c7
   },
   noIdOption
 );
@@ -233,5 +152,3 @@ listingOnboardingSchema.index({ "broker_and_agent.sub": 1, "broker_and_agent.fir
 listingOnboardingSchema.index({ listing_id: 1, current_step: 1 });
 
 export default model("Listings", listingOnboardingSchema);
-
-
