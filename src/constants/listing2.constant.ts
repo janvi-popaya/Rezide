@@ -85,3 +85,5 @@ export enum AreaType{
   BUILT_UP = "built_up",
   TOTAL_SELLABLE = "total_sellable"
 }
+
+//office data

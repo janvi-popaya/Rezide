@@ -1,281 +1,255 @@
 import * as Constants from "../constants/index.constant.js";
 
+//Checks whether a field is actually missing.
+const isMissing = (value: any): boolean => {
+    return value === undefined || value === null || value === "";
+};
+
 const validateCommonSubmissionFields = (listing: Record<string, any>, errors: string[]) => {
     const details = listing.listing_details;
+    const commercial = listing.commercial_details;
+    const address = listing.listing_address;
+
+    // Main Listing
+    if (isMissing(listing.listing_type)) errors.push("listing_type");
+
+    // Listing Details - COMMON
+    if (isMissing(address?.line_1)) errors.push("listing_address.line_1");
+    if (isMissing(address?.region)) errors.push("listing_address.region");
+    if (isMissing(address?.subregion)) errors.push("listing_address.subregion");
+    if (isMissing(address?.locality)) errors.push("listing_address.locality");
+    if (isMissing(details?.listing_name)) errors.push("listing_details.listing_name");
+    if (isMissing(details?.property_status)) errors.push("listing_details.property_status");
+    if (isMissing(details?.area)) errors.push("listing_details.area");
     
-    if (!listing.listing_type) {
-        errors.push("listing_type");
-    }
 
-    if (!details?.listing_location) {
-        errors.push("listing_details.listing_location");
-    }
+    //======================old
+    if (isMissing(details?.listing_location)) errors.push("listing_details.listing_location");
+    if (isMissing(details?.area_type)) errors.push("listing_details.area_type");
+    if (isMissing(details?.entry_direction)) errors.push("listing_details.entry_direction");
+    if (isMissing(details?.exit_direction)) errors.push("listing_details.exit_direction");
+    if (isMissing(details?.view)) errors.push("listing_details.view");
+    if (isMissing(details?.project_type)) errors.push("listing_details.project_type");
+    if (isMissing(details?.area_unit_type)) errors.push("listing_details.area_unit_type");
+    if (isMissing(details?.possession_timeline)) errors.push("listing_details.possession_timeline");
+    if (isMissing(details?.completion_date)) errors.push("listing_details.completion_date");
+    if (isMissing(details?.flooring)) errors.push("listing_details.flooring");
+    if (isMissing(details?.flooring_type)) errors.push("listing_details.flooring_type");
+    if (isMissing(details?.no_of_passengers_lifts)) errors.push("listing_details.no_of_passengers_lifts");
+    if (isMissing(details?.no_of_service_lifts)) errors.push("listing_details.no_of_service_lifts");
+    if (isMissing(details?.no_of_parkings)) errors.push("listing_details.no_of_parkings");
+    if (isMissing(details?.cross_ventilation)) errors.push("listing_details.cross_ventilation");
+    if (isMissing(details?.natural_light)) errors.push("listing_details.natural_light");
+    if (isMissing(details?.furnishing)) errors.push("listing_details.furnishing");
+    if (isMissing(details?.furnishing_type)) errors.push("listing_details.furnishing_type");
+    if (isMissing(details?.ceiling_height)) errors.push("listing_details.ceiling_height");
+    if (isMissing(details?.ceiling_height_side)) errors.push("listing_details.ceiling_height_side");
+    if (isMissing(details?.vastu_compliant)) errors.push("listing_details.vastu_compliant");
+    if (isMissing(details?.pets_allowed)) errors.push("listing_details.pets_allowed");
+    if (details?.share === undefined || details?.share === null) errors.push("listing_details.share");
+    if (isMissing(address?.city)) errors.push("listing_address.city");
+    if (isMissing(address?.pincode)) errors.push("listing_address.pincode");
 
-    if (!details?.region) {
-        errors.push("listing_details.region");
-    }
+    // Commercial Details - COMMON
+    if (isMissing(commercial?.availability_status)) errors.push("commercial_details.availability_status");
+    if (isMissing(commercial?.available_from)) errors.push("commercial_details.available_from");
+    if (isMissing(commercial?.property_purpose)) errors.push("commercial_details.property_purpose");
+    if (isMissing(commercial?.property_price)) errors.push("commercial_details.property_price");
+    if (isMissing(commercial?.visit_day)) errors.push("commercial_details.visit_day");
+    if (isMissing(commercial?.start_time)) errors.push("commercial_details.start_time");
+    if (isMissing(commercial?.end_time)) errors.push("commercial_details.end_time");
+    if (isMissing(commercial?.current_occupation_status)) errors.push("commercial_details.current_occupation_status");
+    if (isMissing(commercial?.brokerage_terms)) errors.push("commercial_details.brokerage_terms");
+    //====================old
+    if (isMissing(commercial?.discount_price)) errors.push("commercial_details.discount_price");
+    if (isMissing(commercial?.avg_rate_per_sqft)) errors.push("commercial_details.avg_rate_per_sqft");
+    if (isMissing(commercial?.brokerage_charge)) errors.push("commercial_details.brokerage_charge");
+    if (isMissing(commercial?.transfer_charges)) errors.push("commercial_details.transfer_charges");
+    if (isMissing(commercial?.registration_charges)) errors.push("commercial_details.registration_charges");
+    if (isMissing(commercial?.stamp_duty)) errors.push("commercial_details.stamp_duty");
+    if (isMissing(commercial?.maintenance_charges)) errors.push("commercial_details.maintenance_charges");
+    if (isMissing(commercial?.notice_needed)) errors.push("commercial_details.notice_needed");
+    if (isMissing(commercial?.internal_notes)) errors.push("commercial_details.internal_notes");
 
-    if (!details?.sub_region) {
-        errors.push("listing_details.sub_region");
-    }
-
-    if (!details?.subregion) {
-        errors.push("listing_details.subregion");
-    }
-
-    if (!details?.locality) {
-        errors.push("listing_details.locality");
-    }
-
-    if (!details?.listing_city) {
-        errors.push("listing_details.listing_city");
-    }
-
-    if (
-        details?.area === undefined ||
-        details?.area === null
-    ) {
-        errors.push("listing_details.area");
-    }
-
-    if (!details?.area_type) {
-        errors.push("listing_details.area_type");
-    }
-
-    if (!details?.project_type) {
-        errors.push("listing_details.project_type");
-    }
-
-    if (!details?.property_status) {
-        errors.push("listing_details.property_status");
-    }
-
+    // Key Features - COMMON
     if (!Array.isArray(listing.key_features) || listing.key_features.length < 5) {
         errors.push("key_features (minimum 5 required)");
     }
-
-    if (!details?.availability_status) {
-        errors.push("listing_details.availability_status");
-    }
-
-    if (!details?.line_1) {
-        errors.push("listing_details.line_1");
-    }
-    if (!details?.available_from) {
-        errors.push("listing_details.available_from");
-    }
-
-    if (!details?.property_purpose) {
-        errors.push("listing_details.property_purpose");
-    }
-    if (!details?.pincode) {
-        errors.push("listing_details.pincode");
-    }
-    if (!details?.unit_no) {
-        errors.push("listing_details.unit_no");
-    }
-    if (!details?.total_floor) {
-        errors.push("listing_details.total_floor");
-    }
-    if (!details?.floor_no) {
-        errors.push("listing_details.floor_no");
-    }
-    if (!details?.listing_name) {
-        errors.push("listing_details.listing_name");
-    }
-    if (!details?.plot_area) {
-        errors.push("listing_details.plot_area");
-    }
-    if (!details?.area) {
-        errors.push("listing_details.area");
-    }
-    if (!details?.area_unit_type) {
-        errors.push("listing_details.area_unit_type");
-    }
-    if (!details?.ceiling_height) {
-        errors.push("listing_details.ceiling_height");
-    }
-    if (!details?.ceiling_height_side) {
-        errors.push("listing_details.ceiling_height_side");
-    }
-    if (!details?.visit_day) {
-        errors.push("listing_details.visit_day");
-    }
-    if (!details?.start_time) {
-        errors.push("listing_details.start_time");
-    }
-    if (!details?.end_time) {
-        errors.push("listing_details.end_time");
-    }
-    if (!details?.notice_needed) {
-        errors.push("listing_details.notice_needed");
-    }
-    if (!details?.current_occupation_status) {
-        errors.push("listing_details.current_occupation_status");
-    }
-    if (!details?.brokerage_terms) {
-        errors.push("listing_details.brokerage_terms");
-    }
-    if (!details?.discount_price) {
-        errors.push("listing_details.discount_price");
-    }
-    if (!details?.brokerage_charge) {
-        errors.push("listing_details.brokerage_charge");
-    }
-    if (!details?.transfer_charges) {
-        errors.push("listing_details.transfer_charges");
-    }
-    if (!details?.registration_charges) {
-        errors.push("listing_details.registration_charges");
-    }
-    if (!details?.stamp_duty) {
-        errors.push("listing_details.stamp_duty");
-    }
-    if (!details?.internal_notes) {
-        errors.push("listing_details.internal_notes");
-    }
-    if (!details?.share) {
-        errors.push("listing_details.share");
-    }
 };
 
-const validateListingTypeFields = (listing: Record<string, any>, errors: string[]) => {
-    const details = listing.listing_details;
-
-    switch (listing.listing_type) {
-        case Constants.ListingType.HOME: {
-            if (!details?.no_of_bathrooms) {
-                errors.push("listing_details.no_of_bathrooms");
-            }
-            if (!details?.no_of_balconies) {
-                errors.push("listing_details.no_of_balconies");
-            }
-            if (!details?.cross_ventilation) {
-                errors.push("listing_details.cross_ventilation");
-            }
-            if (!details?.natural_light) {
-                errors.push("listing_details.natural_light");
-            }
-            if (!details?.parking_type) {
-                errors.push("listing_details.parking_type");
-            }
-            break;
-        }
-        case Constants.ListingType.OFFICE: {
-            if (!details?.no_of_seats) {
-                errors.push("listing_details.no_of_seats");
-            }
-          
-            if (!details?.no_of_cabins) {
-                errors.push("listing_details.no_of_cabins");
-            }
-           
-            if (!details?.no_of_meeting_rooms) {
-                errors.push("listing_details.no_of_meeting_rooms");
-            }
-          
-            if (!details?.reception_area) {
-                errors.push("listing_details.reception_area");
-            }
-         
-            if (!details?.pantry) {
-                errors.push("listing_details.pantry");
-            }
-            
-            if (!details?.no_of_private_washroom) {
-                errors.push("listing_details.no_of_private_washroom");
-            }
-        
-            if (!details?.no_of_common_washroom) {
-                errors.push("listing_details.no_of_common_washroom");
-            }
-         
-            if (!details?.monthly_rent) {
-                errors.push("listing_details.monthly_rent");
-            }
-        
-            if (!details?.security_amount) {
-                errors.push("listing_details.security_amount");
-            }
-          
-            if (!details?.no_of_private_parkings) {
-                errors.push("listing_details.no_of_private_parkings");
-            }
-         
-            if (!details?.cam_charges) {
-                errors.push("listing_details.cam_charges");
-            }
-         
-            if (!details?.building_plan_approval) {
-                errors.push("listing_details.building_plan_approval");
-            }
-           
-            if (!details?.fire_noc) {
-                errors.push("listing_details.fire_noc");
-            }
-            break;
-        }
-        case Constants.ListingType.INDUSTRIAL: {
-            if (details?.plot_area === undefined || details?.plot_area === null) {
-                errors.push("listing_details.plot_area");
-            }
-            if (!details?.plot_area_unit_type) {
-                errors.push("listing_details.plot_area_unit_type");
-            }
-            break;
-        }
-        default:
-            break;
-    }
-};
-
+// listing and unit type
 const validateUnitTypeFields = (listing: Record<string, any>, errors: string[]) => {
     const details = listing.listing_details;
-    if (listing.listing_type !== Constants.ListingType.HOME) {
+    const commercial = listing.commercial_details;
+
+    if (isMissing(details?.unit_type)) {
+        errors.push("listing_details.unit_type");
         return;
     }
-    switch (details?.unit_type) {
-        case Constants.HomeUnitType.APARTMENT: {
-            if (!details?.project) {
-                errors.push("listing_details.project");
+
+    // HOME
+    if (listing.listing_type === Constants.ListingType.HOME) {
+        switch (details.unit_type) {
+            case Constants.HomeUnitType.APARTMENT:
+            case Constants.HomeUnitType.DUPLEX:
+            case Constants.HomeUnitType.PENTHOUSE:
+            case Constants.HomeUnitType.JODI:
+            case Constants.HomeUnitType.STUDIO:
+            case Constants.HomeUnitType.INDEPENDENT_FLOOR: {
+                if (isMissing(details?.tower)) errors.push("listing_details.tower");
+                if (isMissing(details?.UnitFloorPosition)) errors.push("listing_details.UnitFloorPosition");                
+                if (isMissing(details?.floor_no)) errors.push("listing_details.floor_no");
+                if (isMissing(details?.project_type)) errors.push("listing_details.project_type");
+                if (isMissing(details?.area_unit_type)) errors.push("listing_details.area_unit_type");
+                if (isMissing(details?.flooring_type)) errors.push("listing_details.flooring_type");
+                if (isMissing(details?.ceiling_height)) errors.push("listing_details.ceiling_height");
+                if (isMissing(details?.ceiling_height_side)) errors.push("listing_details.ceiling_height_side");
+                if (isMissing(details?.view)) errors.push("listing_details.view");
+                if (isMissing(details?.entry_direction)) errors.push("listing_details.entry_direction");
+                if (isMissing(details?.cross_ventilation)) errors.push("listing_details.cross_ventilation");
+                if (isMissing(details?.bhk_type)) errors.push("listing_details.bhk_type");
+                if (isMissing(details?.no_of_balconies)) errors.push("listing_details.no_of_balconies");
+                if (isMissing(details?.natural_light)) errors.push("listing_details.natural_light");
+                if (isMissing(details?.no_of_parkings)) errors.push("listing_details.no_of_parkings");
+
+                //=======old
+                if (isMissing(details?.project)) errors.push("listing_details.project");
+                if (isMissing(details?.unit_no)) errors.push("listing_details.unit_no");
+                if (isMissing(details?.bhk)) errors.push("listing_details.bhk");
+                if (isMissing(details?.no_of_bathrooms)) errors.push("listing_details.no_of_bathrooms");
+                if (isMissing(commercial?.parking_type)) errors.push("commercial_details.parking_type");
+                break;
             }
-            if (!details?.tower) {
-                errors.push("listing_details.tower");
+
+            case Constants.HomeUnitType.VILLA:
+            case Constants.HomeUnitType.INDEPENDENT_HOUSE:
+            case Constants.HomeUnitType.HOLIDAY_HOME:
+            case Constants.HomeUnitType.ROW_TOWN_HOUSE: {
+                if (isMissing(details?.unit_no)) errors.push("listing_details.unit_no");
+                if (isMissing(details?.structure)) errors.push("listing_details.structure");
+                //====old
+                if (isMissing(details?.bhk)) errors.push("listing_details.bhk");
+                if (isMissing(details?.bhk_type)) errors.push("listing_details.bhk_type");
+                if (isMissing(details?.building_status)) errors.push("listing_details.building_status");
+                if (isMissing(details?.building_age)) errors.push("listing_details.building_age");
+                if (isMissing(details?.boundary_wall_type)) errors.push("listing_details.boundary_wall_type");
+                if (isMissing(details?.boundary_wall_height)) errors.push("listing_details.boundary_wall_height");
+                if (isMissing(details?.boundary_wall_height_side)) errors.push("listing_details.boundary_wall_height_side");
+                if (isMissing(details?.gate_type)) errors.push("listing_details.gate_type");
+                if (isMissing(details?.gate_height)) errors.push("listing_details.gate_height");
+                if (isMissing(details?.gate_height_side)) errors.push("listing_details.gate_height_side");
+                if (isMissing(details?.servant_quarters)) errors.push("listing_details.servant_quarters");
+                if (isMissing(details?.lawn_area)) errors.push("listing_details.lawn_area");
+                if (isMissing(commercial?.parking_type)) errors.push("commercial_details.parking_type");
+                break;
             }
-            if (!details?.unit_no) {
-                errors.push("listing_details.unit_no");
-            }
-            if (!details?.floor_no) {
-                errors.push("listing_details.floor_no");
-            }
-            if (!details?.bhk) {
-                errors.push("listing_details.bhk");
-            }
-            break;
+
+            default:
+                errors.push(`listing_details.unit_type: unsupported home unit type '${details.unit_type}'`);
+                break;
         }
-        case Constants.HomeUnitType.VILLA: {
-            if (!details?.bhk) {
-                errors.push("listing_details.bhk");
-            }
-            if (!details?.lawn_area) {
-                errors.push("listing_details.lawn_area");
-            }
-            break;
-        }
-        default:
-            break;
+        return;
     }
+
+    // OFFICE
+    if (listing.listing_type === Constants.ListingType.OFFICE) {
+        switch (details.unit_type) {
+            case Constants.OfficeUnitType.INDEPENDENT_HOUSE:
+            case Constants.OfficeUnitType.INDEPENDENT_BUILDING: {
+                //====new locationHub and Unit number remaining to add
+                if (isMissing(details?.no_of_seats)) errors.push("listing_details.no_of_seats");
+                if (isMissing(details?.no_of_conference_rooms)) errors.push("listing_details.no_of_conference_rooms");
+                if (isMissing(details?.pantry)) errors.push("listing_details.pantry");
+                //===old
+                if (isMissing(details?.tower)) errors.push("listing_details.tower");
+                if (isMissing(details?.unit_no)) errors.push("listing_details.unit_no");
+                if (isMissing(details?.floor_no)) errors.push("listing_details.floor_no");
+                if (isMissing(details?.UnitFloorPosition)) errors.push("listing_details.UnitFloorPosition");
+                if (isMissing(details?.no_of_cabins)) errors.push("listing_details.no_of_cabins");
+                if (isMissing(details?.no_of_meeting_rooms)) errors.push("listing_details.no_of_meeting_rooms");
+                if (isMissing(details?.reception_area)) errors.push("listing_details.reception_area");
+                if (isMissing(details?.pantry)) errors.push("listing_details.pantry");
+                if (isMissing(details?.no_of_private_washroom)) errors.push("listing_details.no_of_private_washroom");
+                if (isMissing(details?.no_of_common_washroom)) errors.push("listing_details.no_of_common_washroom");
+                if (isMissing(details?.no_of_private_parkings)) errors.push("listing_details.no_of_private_parkings");
+                if (isMissing(commercial?.monthly_rent)) errors.push("commercial_details.monthly_rent");
+                if (isMissing(commercial?.security_amount)) errors.push("commercial_details.security_amount");
+                if (isMissing(commercial?.cam_charges)) errors.push("commercial_details.cam_charges");
+                if (isMissing(commercial?.building_plan_approval)) errors.push("commercial_details.building_plan_approval");
+                if (isMissing(commercial?.fire_noc)) errors.push("commercial_details.fire_noc");
+                break;
+            }
+
+            default:
+                errors.push(`listing_details.unit_type: unsupported office unit type '${details.unit_type}'`);
+                break;
+        }
+        return;
+    }
+
+    // INDUSTRIAL
+    if (listing.listing_type === Constants.ListingType.INDUSTRIAL) {
+        switch (details.unit_type) {
+            case Constants.IndustrialUnitType.WAREHOUSE:
+            case Constants.IndustrialUnitType.DARKSTORE: {
+                if (isMissing(details?.property_price)) errors.push("listing_details.property_price");
+                if (isMissing(details?.region)) errors.push("listing_details.region");
+                if (isMissing(details?.subregion)) errors.push("listing_details.subregion");
+                if (isMissing(details?.project_name)) errors.push("listing_details.project_name");
+                if (isMissing(details?.unit_no)) errors.push("listing_details.unit_no");
+                if (isMissing(details?.floor_no)) errors.push("listing_details.floor_no");
+                if (isMissing(details?.listing_name)) errors.push("listing_details.listing_name");
+                if (isMissing(details?.district)) errors.push("listing_details.district");
+                if (isMissing(details?.unit_no)) errors.push("listing_details.unit_no");
+                if (isMissing(details?.area)) errors.push("listing_details.area");
+                break;
+            }
+            default: {
+                errors.push(`listing_details.unit_type: unsupported industrial unit type '${details.unit_type}'`);
+                break;
+            }
+        }
+        return;
+    }
+    // RETAIL
+    if (listing.listing_type === Constants.ListingType.RETAIL) {
+        switch (details.unit_type) {
+            case Constants.RetailUnitType.SHOP:
+            case Constants.RetailUnitType.SHOWROOM: {
+                // Add retail-specific mandatory fields here.
+                break;
+            }
+            default: {
+                errors.push(`listing_details.unit_type: unsupported retail unit type '${details.unit_type}'`);
+                break;
+            }
+        }
+    }
+    // LAND
+    if (listing.listing_type === Constants.ListingType.LAND) {
+        switch (details.unit_type) {
+            case Constants.LandUnitType.RESIDENTIAL_PLOT:
+            case Constants.LandUnitType.COMMERCIAL_LAND: {
+                // Add land-specific mandatory fields here.
+                //same update 
+                break;
+            }
+            default: {
+                errors.push(`listing_details.unit_type: unsupported land unit type '${details.unit_type}'`);
+                break;
+            }
+        }
+        return;
+    }   
+
+    // Unsupported listing type
+    errors.push(`Unsupported listing_type: ${listing.listing_type}`);
 };
+
+//main submission validation
 export const validateListingSubmission = (listing: Record<string, any>): string[] => {
     const errors: string[] = [];
-    //Common fields required for every listing
     validateCommonSubmissionFields(listing, errors);
-
-    //Fields based on listing_type
-    validateListingTypeFields(listing, errors);
-
-    //Fields based on unit_type
     validateUnitTypeFields(listing, errors);
-
-    return errors;
+    return [...new Set(errors)];
 };
