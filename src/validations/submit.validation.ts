@@ -216,7 +216,16 @@ const validateUnitTypeFields = (listing: Record<string, any>, errors: string[]) 
         switch (details.unit_type) {
             case Constants.RetailUnitType.SHOP:
             case Constants.RetailUnitType.SHOWROOM: {
-                // Add retail-specific mandatory fields here.
+                if (isMissing(details?.property_price)) errors.push("listing_details.property_price");
+                if (isMissing(details?.region)) errors.push("listing_details.region");
+                if (isMissing(details?.subregion)) errors.push("listing_details.subregion");
+                if (isMissing(details?.project_name)) errors.push("listing_details.project_name");
+                if (isMissing(details?.unit_no)) errors.push("listing_details.unit_no");
+                if (isMissing(details?.floor_no)) errors.push("listing_details.floor_no");
+                if (isMissing(details?.listing_name)) errors.push("listing_details.listing_name");
+                if (isMissing(details?.project_type)) errors.push("listing_details.project_type");
+                if (isMissing(details?.area)) errors.push("listing_details.area");
+                if (isMissing(details?.area_unit_type)) errors.push("listing_details.area_unit_type");
                 break;
             }
             default: {
@@ -229,9 +238,16 @@ const validateUnitTypeFields = (listing: Record<string, any>, errors: string[]) 
     if (listing.listing_type === Constants.ListingType.LAND) {
         switch (details.unit_type) {
             case Constants.LandUnitType.RESIDENTIAL_PLOT:
-            case Constants.LandUnitType.COMMERCIAL_LAND: {
-                // Add land-specific mandatory fields here.
-                //same update 
+                case Constants.LandUnitType.COMMERCIAL_LAND: {
+                    // Add land-specific mandatory fields here.
+                    //same update 
+                    if (isMissing(details?.property_price)) errors.push("listing_details.property_price");
+                    if (isMissing(details?.region)) errors.push("listing_details.region");
+                    if (isMissing(details?.subregion)) errors.push("listing_details.subregion");
+                    if (isMissing(details?.listing_name)) errors.push("listing_details.listing_name");
+                    if (isMissing(details?.district )) errors.push("listing_details.district");
+                    if (isMissing(details?.area)) errors.push("listing_details.area");
+                    if (isMissing(details?.area_unit_type)) errors.push("listing_details.area_unit_type");
                 break;
             }
             default: {
