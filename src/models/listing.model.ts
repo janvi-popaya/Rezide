@@ -13,7 +13,12 @@ import {
   RoadFacingSide,
   SourceOfWater,
   SewageDrainage,
-  ExistingStructure
+  ExistingStructure,
+  ElectricityConnection,
+  AgeOfBuilding,
+  FitOutCondition,
+  FlooringType,
+  VisibilityFrom
 } from "../constants/index.constant.js";
 
 const noIdOption = { _id: false };
@@ -48,11 +53,12 @@ const ListingDetailsSchema = new Schema(
     plot_area_unit_type: { type: String, enum: Object.values(PlotAreaUnitType) },
     plot_area: String,
     property_status: { type: String, enum: Object.values(PropertyStatus) },
+    age_of_building:{ type: String, enum: Object.values(AgeOfBuilding) },
     possession_timeline: { type: String, enum: Object.values(PossessionTimeline) },
     completion_date: Date,
     no_of_service_lifts: Number,
     total_floor: String,
-    flooring: String,
+    flooring: { type: String, enum: Object.values(FlooringType) },
     flooring_type: String,
     no_of_balconies: String,
     no_of_bathrooms: String,
@@ -134,10 +140,10 @@ const ListingDetailsSchema = new Schema(
     constructed_area_unit_type: { type: String, enum: Object.values(AreaUnitType) },
 
     //------------- Retail Specific -------------------
-    fit_out_condition: String,
+    fit_out_condition: { type: String, enum: Object.values(FitOutCondition) },
     frontage: Number,
     frontageType: String,
-    visibility_from: String,
+    visibility_from: { type: String, enum: Object.values(VisibilityFrom) },
     signage_rights: Boolean,
     display_area: Boolean,
     mezzanine: Boolean
@@ -191,7 +197,7 @@ const CommercialDetailsSchema = new Schema(
     suitable_for: String,
     oc: { type: String, enum: Object.values(YesAndNo) },
     cam_charges_included: { type: String, enum: Object.values(YesAndNo) },
-    keys_occupation: String
+    keys_occupation: { type: String, enum: Object.values(KeysOccupancy) },
   },
   noIdOption
 );

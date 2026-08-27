@@ -11,6 +11,7 @@ export enum PropertyStatus{
     UNDER_CONSTRUCTION = "under_construction",
     NEWLY_LAUNCHED = "newly_launched",
     READY_TO_MOVE = "ready_to_move",
+    BUILT_TO_SUIT = "built_to_suit",
     CLEAR_TITLE = "clear_title",
     UNDER_LITIGATION = "under_litigation",
     PRIVATE_ACQUIRED="private_acquired",
@@ -27,7 +28,11 @@ export enum ProjectType{
     GATED_AMENITIES = "gated_amenities",
     STANDALONE = "standalone",
     GATED_NO_AMENITIES = "gated_no_amenities",
-    STANDALONE_AMENITIES = "standalone_amenities"
+    STANDALONE_AMENITIES = "standalone_amenities",
+    COMMERCIAL_BUILDING = "commercial_building",
+    SHOPPING_MALL = "shopping_mall",
+    MIXED_USE="mixed_use",
+    RETAIL_MARKET="retail_market",
 }
 export enum PlotAreaUnitType{
     SQR_FT = "sqft",
@@ -51,4 +56,14 @@ export enum PlotAreaUnitType{
     PERCH = "perch",
     ARE = "are",
     KUNCHAM = "kuncham",
+}
+
+//retail
+export enum AgeOfBuilding{
+    LESS_THAN_ONE_YEAR = "<1 year",
+    ONE_TO_THREE_YEARS = "1-3 years",
+    THREE_TO_FIVE_YEARS = "3-5 years",
+    FIVE_TO_TEN_YEARS = "5-10 years",
+    TEN_TO_TWENTY_YEARS = "10-20 years",
+    GREATER_THAN_TWENTY_YEARS = ">20 years",
 }

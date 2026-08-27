@@ -31,7 +31,7 @@ Retails Data :
     "fit_out_condition": "Warm Shell", // fit out condition
     "flooring": "Marble", // flooring
     "frontage": 12, // frontage
-    "frontageType": "Feet", // frontage type
+    "frontageType": "", // frontage type
     "visibilty_from": "Internal Road", // visibility from
     "signage_rights": true, // signage rights
     "ceiling_height": "13", // ceiling height centere
