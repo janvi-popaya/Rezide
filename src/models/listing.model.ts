@@ -38,6 +38,7 @@ const ListingDetailsSchema = new Schema(
     plot_area_unit_type: { type: String, enum: Object.values(PlotAreaUnitType) },
     plot_area: String,
     property_status: { type: String, enum: Object.values(PropertyStatus) },
+    age_of_building: { type: String, enum: Object.values(AgeOfBuilding) },///////////////////////////////////////
     possession_timeline: { type: String, enum: Object.values(PossessionTimeline) },
     completion_date: Date,
     no_of_service_lifts: Number,
@@ -78,18 +79,28 @@ const ListingDetailsSchema = new Schema(
     building_status: String,
     building_age: Number,
     structure: String,
-
+    
     boundary_wall_type: String,
     boundary_wall_height: String,
     boundary_wall_height_side: String,
-
+    
     gate_type: String,
     gate_height: String,
     gate_height_side: String,
-
+    
     servant_quarters: { type: String, enum: Object.values(YesAndNo) },
     lawn_area: String,
-
+    
+    
+    //retail additional fields
+    fit_out_condition: { type: String, enum: Object.values(FitOutCondition) },
+    frontage: Number,
+    signage_rights: { type: Boolean, default: false },
+    visibility_from : { type: String, enum: Object.values(VisibilityFrom) },
+    display_area: { type: Boolean, default: false },
+    mezzanine : { type: Boolean, default: false },
+    power_in_KA: String,
+    
   },
   noIdOption
 );
@@ -124,12 +135,14 @@ const CommercialDetailsSchema = new Schema(
 
     //-------------office page fields -------------------
     monthly_rent: { type: Number, default: 0 },
-    // security_amount: Number,
     cam_charges: {type:Number, default: 0},
     building_plan_approval: {type:String, enum: Object.values(YesAndNo)},
     fire_noc: {type:String, enum: Object.values(YesAndNo)},
     move_in_charges: {type: Number, default: 0},
     sale_consideration: Number,
+
+    //retail additional fields
+    suitable_for: String,
   },
   noIdOption
 );
