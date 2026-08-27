@@ -11,6 +11,10 @@ export enum PropertyStatus{
     UNDER_CONSTRUCTION = "under_construction",
     NEWLY_LAUNCHED = "newly_launched",
     READY_TO_MOVE = "ready_to_move",
+    CLEAR_TITLE = "clear_title",
+    UNDER_LITIGATION = "under_litigation",
+    PRIVATE_ACQUIRED="private_acquired",
+    GOVERNMENT_ACQUIRED="government_acquired",
 }
 export enum PossessionTimeline{
     LESS_THAN_ONE_YEAR = "<1 year",
